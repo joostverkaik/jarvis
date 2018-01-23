@@ -1,0 +1,369 @@
+/***************************************************************************************************************************************/
+/************************************************************ HOME CALENDAR STYLE ******************************************************/
+/***************************************************************************************************************************************/
+
+.agenda {
+
+	width: 95%;
+	height: 75%;
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+	align-items: center;
+	border: 1px solid gray;
+	border-radius: 5px;
+
+}
+
+.agendaHeader {
+
+	width: 95%;
+	height: 20%;
+	display: flex;
+	flex-direction: row;
+	justify-content: center;
+	align-items: center;
+	margin-bottom: 10px;
+	margin-top: 20px;
+}
+
+.agendaHeader h3 {
+
+	text-align: center;
+	color: #2D3C77;
+	width: 80%;
+
+}
+
+.agendaHeader img {
+
+	width: 25px;
+	height: 25px;
+	border-radius: 100%;
+	cursor: pointer;
+
+}
+
+.agendaHeader img:hover {
+
+	transition: transform 0.2s linear 0s;
+	transform: scale(1.2, 1.2);
+
+}
+
+.agengaBody {
+
+	width: 90%;
+	height: 80%;
+
+}
+
+.monthsCont {
+
+	width: 100%;
+	height: 100%;
+	display: flex;
+	flex-direction: column;
+	justify-content: flex-start;
+	align-items: center;
+
+}
+
+.weeksName {
+
+	width: 100%;
+	height: auto;
+	border-bottom: 1px solid #2D3C77;
+	display: flex;
+	flex-direction: row;
+	justify-content: center;
+	align-items: flex-start;
+	padding-bottom: 5px;
+
+}
+
+.weeksName h3 {
+
+	text-align: center;
+	color: #2D3C77;
+	margin-left: 9px;
+	margin-right: 23px;
+	margin-bottom: 0px;
+	width: 30px;
+
+}
+
+.days {
+
+	display: flex;
+	flex-direction: row;
+	flex-wrap: wrap;
+	justify-content: flex-start;
+	align-items: flex-start;
+	width: 470px;
+	height: auto;
+	margin-left: 40px;
+
+}
+
+.daysNumb {
+
+	width: 30px;
+	height: 30px;
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+	margin-left: 15px;
+	margin-right: 15px;
+	margin-bottom: 15px;
+	margin-top: 15px;
+
+}
+
+.daysNumb p {
+
+	width: auto;
+	height: 80%;
+	color: #2D3C77;
+	text-align: center;
+	font-size: 18px;
+	cursor: pointer;
+
+}
+
+.daysNumb:hover p {
+
+	transform: scale(1.4, 1.4);
+	color: #F65F59;
+
+}
+
+.eventNotification {
+
+	width: 100%;
+	height: 20%;
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+	margin-top: -10px;
+	margin-bottom: 0px;
+
+}
+
+.notificationBar {
+
+	margin: 1px;
+
+}
+
+.agendaFooter {
+
+	width: 90%;
+	height: 45%;
+	display: flex;
+	flex-direction: row;
+	justify-content: space-between;
+	align-items: flex-start;
+	position: relative;
+	bottom: 10px;
+
+}
+
+.eventsOwner {
+	width: 80%;
+	padding: 5px;
+	display: flex;
+	flex-direction: row;
+	flex-wrap: wrap;
+	align-items: flex-start;
+	border: 1px solid green;
+}
+.owner {
+	width: 30%;
+
+}
+
+#bored {
+
+	width: 150px;
+	height: auto;
+	padding-top: 5px;
+	padding-bottom: 5px;
+	text-align: center;
+	font-size: 17px;
+	color: white;
+	border: 1px solid #F65F59;
+	border-radius: 5px;
+	background-color: #F65F59;
+	cursor: pointer;
+
+}
+
+.tools {
+
+	width: 95%;
+	height: 22%;
+	display: flex;
+	flex-direction: row;
+	justify-content: space-between;
+	align-items: center;
+
+}
+
+#addNote {
+
+	height: 100%;
+	width: 200px;
+	border: 1px solid #E9C53C;
+	background-color: #E9C53C;
+	cursor: pointer;
+
+}
+
+.toolsHeader {
+
+	width: 75%;
+	height: 100%;
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+	align-items: flex-end;
+
+}
+
+.modes {
+
+	width: 100%;
+	height: 50%;
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+	align-items: flex-end;
+
+}
+
+.modes h3 {
+
+	text-align: left;
+	color: #2D3C77;
+	margin: 0px;
+
+}
+
+.modes p {
+
+	text-align: left;
+	font-size: 18px;
+	color: #2D3C77;
+	margin: 0px;
+
+}
+
+#micro {
+
+	width: 40px;
+	height: 40px;
+	border: 1px solid #F65F59;
+	border-radius: 100%;
+	background-color: #F65F59;
+	cursor: pointer;
+
+}
+
+/***************************************************************************************************************************************/
+/************************************************************ HOME WEATHER STYLE *********************************************************************/
+/***************************************************************************************************************************************/
+
+.tempDateInfo {
+
+	width: 70%;
+	height: 70px;
+	display: flex;
+	flex-direction: row;
+	justify-content: center;
+	align-items: center;
+	margin-bottom: 30px;
+
+}
+
+.temperature, .dateHour {
+
+	width: auto;
+	height: 100%;
+	padding-left: 20px;
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+
+}
+
+.temperature {
+
+	border-right: 1px solid #2D3C77;
+	padding-right: 20px;
+
+}
+
+.temperature h1, .tempName, .dateHour p, .dateHour p {
+
+	width: 100%;
+	height: auto;
+	text-align: left;
+	color: #2D3C77;
+	margin: 1px;
+
+}
+
+.temperature h1 {
+
+	font-size: 40px;
+
+}
+
+.tempName, .dateHour p, .dateHour p {
+
+	font-size: 20px;
+
+}
+
+.curDate {
+
+	position: relative;
+	top: 5px;
+
+}
+
+.weatherButts {
+
+	width: auto;
+	height: auto;
+	display: flex;
+	flex-direction: row;
+	justify-content: center;
+	align-items: center;
+	margin-bottom: -40px;
+	position: relative;
+	top: 10px;
+
+}
+
+.weatherButts img {
+
+	width: 15px;
+	height: 15px;
+	margin-left: 10px;
+	margin-right: 10px;
+	cursor: pointer;
+
+}
+
+/***************************************************************************************************************************************/
+/************************************************************ STYLE ********************************************************************/
+/***************************************************************************************************************************************/
+
+/***************************************************************************************************************************************/
+/************************************************************ STYLE ********************************************************************/
+/***************************************************************************************************************************************/
