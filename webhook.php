@@ -135,6 +135,7 @@ switch ($action) {
                 });
                 break;
             
+            case "go Collective":
             case "go collective":
                 \Ratchet\Client\connect('ws://joostverkaik.nl:8080/')->then(function (\Ratchet\Client\WebSocket $conn
                 ) use (
