@@ -1,16 +1,36 @@
-<div class="evtHeader">
+<?php
+
+require "../../../models/home_model.php";
+
+$calendar = new Calendar();
+?>
+
+<div class="agendaHeader">
 
 	<img src="../jarvis/public/media/events/eventleft.svg" alt="" id="backToEvent">
-	<h2>Events</h2>
+	<h3>Events</h3>
 	<img src="../jarvis/public/media/events/addevent.svg" alt="" id="addEvents">
 
 </div>
 
-<div class="evtDetails">
+<div class="agendaBody">
 
 
 </div>
 
+<div class="agendaFooter">
+
+	<div class="eventsOwner" style="border: 1px solid #111111; padding: 5px;">
+        
+        <?php
+        echo $calendar->getUsers();
+        ?>
+
+	</div>
+
+	<button id="bored">Suggest activities</button>
+
+</div>
 
 <style media="screen">
 
@@ -86,13 +106,6 @@
 
 	}
 
-	.evtCont:hover {
-
-		transition: transform 0.3 linear 0s;
-		transform: scale(0.9, 0.9);
-
-	}
-
 	.evtCont h3 {
 
 		color: white;
@@ -108,7 +121,6 @@
 		height: 20%;
 		display: flex;
 		flex-direction: row;
-		justify-content: space-around;
 		justify-content: center;
 
 	}

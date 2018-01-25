@@ -1,6 +1,6 @@
 <?php
 require $_SERVER['DOCUMENT_ROOT'] . "/jarvis/site/core/model.php";
-require $_SERVER['DOCUMENT_ROOT'] . "/jarvis/site/models/phpUtils.php";
+require_once $_SERVER['DOCUMENT_ROOT'] . "/jarvis/site/models/phpUtils.php";
 
 class Calendar extends model
 {
@@ -74,6 +74,24 @@ class Calendar extends model
         
     }
     
+    public function getUsers()
+    {
+        
+        $users = $this->PDO()->query("SELECT *
+									  FROM users
+									  ORDER BY `firstname`");
+        
+        $return = '';
+        foreach ($users->fetchAll(PDO::FETCH_ASSOC) as $user) {
+            $return .= '
+			<div class="owner" style="color: ' . $user['color'] . '">
+                ' . $user['firstname'] . '
+			</div>
+			';
+        }
+        return $return;
+    }
+    
     
     public function agenda()
     {
@@ -103,37 +121,39 @@ class Calendar extends model
     
     public function eventNotifier($eventDay)
     {
-        
-        $eventNotificationAuthors = $this->PDO()->prepare("SELECT u.`firstname`, u.color
+        if (isset($_COOKIE['current_mode']) && $_COOKIE['current_mode'] !== 'open') {
+            $eventNotificationAuthors = $this->PDO()->prepare("SELECT u.`firstname`, u.color
 													FROM users u
 													LEFT JOIN events e
 													ON u.user_id = e.added_by
 													WHERE e.`start_date` = ?");
-        
-        $eventNotificationInvitees = $this->PDO()->prepare("SELECT u.firstname, u.color
+    
+            $eventNotificationInvitees = $this->PDO()->prepare("SELECT u.firstname, u.color
 													FROM invites i
 													LEFT JOIN events e
 													ON i.event_id = e.id
 													LEFT JOIN users u
 													ON i.user_id = u.user_id
 													WHERE e.`start_date` = ?");
+    
+            $eventNotificationAuthors->execute(array($eventDay));
+            $eventNotificationInvitees->execute(array($eventDay));
+    
+            $eventNotification = array_merge($eventNotificationAuthors->fetchAll(PDO::FETCH_ASSOC),
+                $eventNotificationInvitees->fetchAll(PDO::FETCH_ASSOC));
+            $eventNotification = array_unique_multidimensional($eventNotification);
+            if (count($eventNotification) > 0) {
         
-        $eventNotificationAuthors->execute(array($eventDay));
-        $eventNotificationInvitees->execute(array($eventDay));
-       
-        $eventNotification = array_merge($eventNotificationAuthors->fetchAll(PDO::FETCH_ASSOC), $eventNotificationInvitees->fetchAll(PDO::FETCH_ASSOC));
-        $eventNotification = array_unique_multidimensional($eventNotification);
-        if (count($eventNotification) > 0) {
-        	
-            foreach ($eventNotification as $displayNotificationBar) {
-        
-                ?>
+                foreach ($eventNotification as $displayNotificationBar) {
+            
+                    ?>
 
-				<hr class="notificationBar"
-					style="border: 1px solid <?= $displayNotificationBar['color'] ?>; width: 100%; color: <?= $displayNotificationBar['color'] ?>;" />
-        
-                <?php
-        
+					<hr class="notificationBar"
+						style="border: 1px solid <?= $displayNotificationBar['color'] ?>; width: 100%; color: <?= $displayNotificationBar['color'] ?>;" />
+            
+                    <?php
+            
+                }
             }
         }
         

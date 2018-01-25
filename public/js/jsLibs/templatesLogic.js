@@ -1,6 +1,5 @@
 EventsTemplate = {
 
-
 	checkBoxs: function (target) {
 
 		var boxs = document.querySelectorAll('.' + target);
@@ -10,7 +9,7 @@ EventsTemplate = {
 			var boxArr = boxs[i];
 
 			var boxValue = boxArr.value;
-			if (boxArr.checked) {
+			if (boxArr.checked && !boxArr.disabled) {
 
 				boxsArr.push(boxValue);
 
@@ -25,7 +24,6 @@ EventsTemplate = {
 
 	},
 
-
 	addEvents: function () {
 
 		var eventName = document.getElementById("eventName").value;
@@ -34,26 +32,15 @@ EventsTemplate = {
 		var eventEnd = document.getElementById("eventEnd").value;
 		var eventTimeStart = document.getElementById("eventTimeStart").value;
 		var eventTimeEnd = document.getElementById("eventTimeEnd").value;
+		var eventPrivate = document.getElementById("private");
 		var allDay = document.getElementById("allDay");
-		var allDayVal;
-
-		//var dayStart = eventStartD.slice(0,2);
-		//var dayEnd = eventEndD.slice(0,2);
-
-		//var curYearStart = eventStartD.slice(6,10);
-		//var curYearEnd = eventEndD.slice(6,10);
-
-
-		// var eventStartS = Utils.parse_month(Utils.singleNumber(eventStartD));
-		//var eventEndS = Utils.parse_month(Utils.singleNumber(eventEndD));
-
-		//var = eventStart = dayStart+'-'+eventStartS+'-'+curYearStart;
-		//var = eventEnd = dayEnd+'-'+eventEndS+'-'+curYearEnd;
-
+		var allDayVal, eventPrivateVal;
 
 		if (allDay.checked) {
 
 			allDayVal = '1';
+			eventTimeStart = '00:00';
+			eventTimeEnd = '00:00';
 
 		} else {
 
@@ -61,7 +48,19 @@ EventsTemplate = {
 
 		}
 
+		if (eventPrivate.checked) {
+
+			eventPrivateVal = '1';
+
+		} else {
+
+			eventPrivateVal = '0';
+
+		}
+
+
 		var invites = EventsTemplate.checkBoxs('invitedCheckbox');
+		console.log(invites);
 
 		var xhr = Utils.initXHR();
 
@@ -79,9 +78,9 @@ EventsTemplate = {
 		};
 
 
-		if (eventName != "" && eventLocation != "" && eventStart != "" && eventEnd != "" && eventTimeStart != "" && eventTimeEnd != "") {
+		if (eventName != "" && eventStart != "" && eventEnd != "" && eventTimeStart != "" && eventTimeEnd != "") {
 
-			xhr.open('GET', '../jarvis/site/models/ajax_requests/addEvent.php?eventName=' + eventName + '&eventLocation=' + eventLocation + '&eventStart=' + eventStart + '&eventEnd=' + eventEnd + '&eventTimeStart=' + eventTimeStart + '&eventTimeEnd=' + eventTimeEnd + '&allDayVal=' + allDayVal + '&invites=' + invites, true);
+			xhr.open('GET', '../jarvis/site/models/ajax_requests/addEvent.php?eventName=' + eventName + '&eventLocation=' + eventLocation + '&eventStart=' + eventStart + '&eventEnd=' + eventEnd + '&eventTimeStart=' + eventTimeStart + '&eventTimeEnd=' + eventTimeEnd + '&private=' + eventPrivateVal + '&allDayVal=' + allDayVal + '&invites=' + JSON.stringify(invites), true);
 			xhr.send();
 
 		} else {
@@ -116,28 +115,25 @@ EventsTemplate = {
 			if (this.readyState == 4 && this.status == 200) {
 
 				var results = xhr.responseText;
-				var evtDetails = document.querySelector('.evtDetails');
+				var evtDetails = document.querySelector('.agendaBody');
 
-				$('#addEvents').data('date', dateNumb + '-' + parsedCurMonth);
+				$('#addEvents').data('date', dateNumb + '-' + parsedCurMonth + '-2018');
 
 				evtDetails.innerHTML = results;
 
-				var evtCont = document.querySelectorAll('.evtCont');
+				$('.event').each(function(i, el) {
+					if (parseInt($(el).data('id')) > 0) {
+						$(el).click(function () {
+							var eventId = $(el).data('id');
+							EventsTemplate.displayEventTemplate(eventId);
+						});
+					}
+				});
 
-				for (var i = 0; i < evtCont.length; i++) {
-
-					var evtContArr = evtCont[i];
-
-					evtContArr.addEventListener('click', function (e) {
-
-						var eventName = e.currentTarget.childNodes[1].textContent;
-						EventsTemplate.displayEventTemplate(eventName);
-
-					})
-
-				}
+				document.getElementsByClassName('scrollablediv')[0].scrollTop = 400;
 
 			}
+
 
 		};
 
@@ -147,7 +143,7 @@ EventsTemplate = {
 	},
 
 
-	displayEventTemplate: function (eventName) {
+	displayEventTemplate: function (eventId) {
 
 		var xhr = Utils.initXHR();
 		var tempName = "eventsDetails";
@@ -160,7 +156,7 @@ EventsTemplate = {
 				receiver.innerHTML = xhr.responseText;
 
 
-				EventsTemplate.displayEventContent(eventName);
+				EventsTemplate.displayEventContent(eventId);
 
 
 			}
@@ -174,7 +170,7 @@ EventsTemplate = {
 	},
 
 
-	displayEventContent: function (eventName) {
+	displayEventContent: function (eventId) {
 
 		var xhr = Utils.initXHR();
 
@@ -186,13 +182,13 @@ EventsTemplate = {
 				evtContent.innerHTML = xhr.responseText;
 
 				EventsTemplate.editEvent();
-				EventsTemplate.deleteEvent(eventName);
+				EventsTemplate.deleteEvent(eventId);
 
 			}
 
 		};
 
-		xhr.open('GET', '../jarvis/site/models/ajax_requests/displayEventsContent.php?eventName=' + eventName, true);
+		xhr.open('GET', '../jarvis/site/models/ajax_requests/displayEventsContent.php?eventId=' + eventId, true);
 		xhr.send();
 
 	},
@@ -206,7 +202,7 @@ EventsTemplate = {
 			var receiver = document.querySelector('.agenda');
 			var xhr = Utils.initXHR();
 
-			var curEvtName = e.currentTarget.parentNode.parentNode.childNodes[3].childNodes[1].textContent;
+			var curEvtId = $('.evtDisplayBody').attr('data-id');
 
 			xhr.onreadystatechange = function () {
 
@@ -220,9 +216,9 @@ EventsTemplate = {
 
 			};
 
-
-			xhr.open('GET', '../jarvis/site/views/templates/appTemplates/' + tempName + '.php?curEvtName=' + curEvtName, true);
+			xhr.open('GET', '../jarvis/site/views/templates/appTemplates/' + tempName + '.php?curEvtId=' + curEvtId, true);
 			xhr.send();
+
 
 		})
 
@@ -234,18 +230,22 @@ EventsTemplate = {
 
 		$('#editNewEvent').click(function () {
 
+			var eventId = document.getElementById("eventId").value;
 			var eventName = document.getElementById("eventName").value;
 			var eventLocation = document.getElementById("eventLocation").value;
 			var eventStart = document.getElementById("eventStart").value;
 			var eventEnd = document.getElementById("eventEnd").value;
 			var eventTimeStart = document.getElementById("eventTimeStart").value;
 			var eventTimeEnd = document.getElementById("eventTimeEnd").value;
+			var eventPrivate = document.getElementById("private");
 			var allDay = document.getElementById("allDay");
-			var allDayVal;
+			var allDayVal, eventPrivateVal;
 
 			if (allDay.checked) {
 
 				allDayVal = '1';
+				eventTimeStart = '00:00';
+				eventTimeEnd = '00:00';
 
 			} else {
 
@@ -253,6 +253,15 @@ EventsTemplate = {
 
 			}
 
+			if (eventPrivate.checked) {
+
+				eventPrivateVal = '1';
+
+			} else {
+
+				eventPrivateVal = '0';
+
+			}
 
 			var invites = EventsTemplate.checkBoxs('invitedCheckbox');
 
@@ -261,25 +270,23 @@ EventsTemplate = {
 
 			xhr.onreadystatechange = function () {
 
-				if (this.readyState == 4 && this.status == 200) {
+				if (this.readyState === 4 && this.status === 200) {
 
-					//receiver.innerHTML = xhr.responseText;
 					alert(xhr.responseText);
-					// Utils.goHomeEvent();
 
 				}
 
 			};
 
 
-			if (eventName != "" && eventLocation != "" && eventStart != "" && eventEnd != "" && eventTimeStart != "" && eventTimeEnd != "") {
+			if (eventName !== "" && eventStart !== "" && eventEnd !== "" && eventTimeStart !== "" && eventTimeEnd !== "") {
 
-				xhr.open('GET', '../jarvis/site/models/ajax_requests/updateEvent.php?eventName=' + eventName + '&eventLocation=' + eventLocation + '&eventStart=' + eventStart + '&eventEnd=' + eventEnd + '&eventTimeStart=' + eventTimeStart + '&eventTimeEnd=' + eventTimeEnd + '&allDayVal=' + allDayVal + '&invites=' + invites, true);
+				xhr.open('GET', '../jarvis/site/models/ajax_requests/updateEvent.php?eventId=' + eventId + '&eventName=' + eventName + '&eventLocation=' + eventLocation + '&eventStart=' + eventStart + '&eventEnd=' + eventEnd + '&eventTimeStart=' + eventTimeStart + '&eventTimeEnd=' + eventTimeEnd + '&private=' + eventPrivateVal + '&allDayVal=' + allDayVal + '&invites=' + JSON.stringify(invites), true);
 				xhr.send();
 
 			} else {
 
-				alert("You have to fill all the fields...");
+				alert("You have to fill in all the fields");
 
 			}
 
@@ -312,4 +319,4 @@ EventsTemplate = {
 
 	}
 
-}
+};

@@ -16,66 +16,23 @@ $main_map = mainMap();
 
 	</div>
 
-	<div class="agengaBody">
+	<div class="agendaBody">
         
         <?php $calendar->display_calendar(); ?>
-
-		<p>
-		<div id="time"></div>
-		<script>
-			var socket = new WebSocket("ws://b7a2c073.ngrok.io/");
-			socket.onmessage = function (msg) {
-				document.getElementById("time").innerText = msg.data;
-				console.log(msg.data);
-			};
-		</script>
-		</p>
 
 	</div>
 
 	<div class="agendaFooter">
 
-		<div class="eventsOwner">
+		<div class="eventsOwner" style="border: 1px solid #111111; padding: 5px;">
             
             <?php
-            $model = new model();
-            
-            $users = $model->prepare("SELECT *
-									  FROM users
-									  ORDER BY `firstname`", []);
-            
-            foreach ($users->fetchAll(PDO::FETCH_ASSOC) as $user) {
-                ?>
-				<div class="owner" style="color: <?= $user['color'] ?>">
-                    <?= $user['firstname'] ?>
-				</div>
-                <?php
-            }
+            echo $calendar->getUsers();
             ?>
 
 		</div>
 
-		<button id="bored">I am bored</button>
-
-	</div>
-
-</div>
-
-<div class="tools">
-
-	<img src="" alt="" id="addNote">
-
-	<div class="toolsHeader">
-
-		<div class="modes">
-
-			<h3>Where would you like to go?</h3>
-			<p>"Collective mode"</p>
-			<p>"Private mode"</p>
-
-		</div>
-
-		<img src="" alt="" id="micro">
+		<button id="bored">Suggest activities</button>
 
 	</div>
 

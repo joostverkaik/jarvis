@@ -2,7 +2,7 @@
 require $_SERVER['DOCUMENT_ROOT'] . "/jarvis/site/core/model.php";
 
 if (isset($_GET['date'])) {
-    $dateTime = new DateTime($_GET['date'] . "-2018 09:00:00");
+    $dateTime = new DateTime($_GET['date']);
 } else {
     $dateTime = new DateTime();
 }
@@ -20,7 +20,7 @@ $timeEnd = $dateTime->format('H') . ":" . $dateTime->format('i');
 
 		<img src="../jarvis/public/media/events/eventleft.svg" alt="" id="backToEvent">
 		<h2>New Event</h2>
-		<h3 id="addNewEvent">Add</h3>
+		<h3 id="addNewEvent">Save</h3>
 
 	</div>
 
@@ -100,12 +100,10 @@ $timeEnd = $dateTime->format('H') . ":" . $dateTime->format('i');
             foreach ($users->fetchAll(PDO::FETCH_ASSOC) as $user) {
                 ?>
 				<div class="inputsInvited">
-
 					<p style="color: <?= $user['color'] ?>;"><label><input type="checkbox" name="invitees[]"
 																		   class="invitedCheckbox"
 																		   value="<?= $user['user_id'] ?>"> <?= $user['firstname'] ?>
 						</label></p>
-
 				</div>
                 <?php
             }
@@ -114,8 +112,8 @@ $timeEnd = $dateTime->format('H') . ":" . $dateTime->format('i');
 		</div>
 		
 		<p>Is this a private event?</p>
-		<div class="private">
-			<p><label><input type="checkbox" name="private" class="privateEvent"
+		<div class="private_event">
+			<p><label><input type="checkbox" name="private" id="private" class="privateEvent"
 								 value="1"> Yes</label></p>
 		</div>
 		

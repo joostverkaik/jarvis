@@ -1,7 +1,7 @@
 html, body {
 
-	margin: 0px;
-	padding: 0px;
+	margin: 0;
+	padding: 0;
 	font-family: 'Open Sans', sans-serif;
 
 }
@@ -10,10 +10,32 @@ h3 {
 	font-family: 'Hind', sans-serif;
 }
 
+h4 {
+	color: #2D3C77;
+}
+
+.background {
+	width: 100%;
+	height: 100%;
+	position: absolute;
+	top: 0;
+	left: 0;
+	z-index: 1;
+	opacity: 0;
+}
+
+header div {
+	z-index: 999;
+}
+
+.gsapAnim {
+	/*opacity: 0;*/
+}
+
 .homeCore {
 
-	width: 100%;
-	height: 100vh;
+	width: 98%;
+	height: 95vh;
 	display: flex;
 	flex-direction: row;
 	justify-content: center;
@@ -22,10 +44,37 @@ h3 {
 
 }
 
+.users_container {
+	width: 100%;
+	height: 5vh;
+	display: flex;
+	flex-direction: row;
+	justify-content: center;
+	align-items: center;
+	margin: auto;
+}
+
+.users {
+	width: 30%;
+	min-width: 400px;
+	margin: 0 auto;
+	padding: 15px;
+	text-align: center;
+	border: 1px solid gray;
+	border-top: 0;
+	-webkit-border-bottom-right-radius: 5px;
+	-webkit-border-bottom-left-radius: 5px;
+	-moz-border-radius-bottomright: 5px;
+	-moz-border-radius-bottomleft: 5px;
+	border-bottom-right-radius: 5px;
+	border-bottom-left-radius: 5px;
+	background-color: white;
+}
+
 .nieuws {
 
-	width: 30%;
-	height: 95%;
+	width: 25%;
+	height: 90%;
 	display: flex;
 	flex-direction: column;
 	justify-content: space-between;
@@ -45,6 +94,7 @@ h3 {
 	border-radius: 5px;
 	background-repeat: no-repeat;
 	background-position: left top;
+	background-color: white;
 
 }
 
@@ -57,17 +107,625 @@ h3 {
 	justify-content: center;
 	align-items: center;
 	border: 1px solid gray;
+	padding-right: 1px;
 	border-radius: 5px;
+	background-color: white;
 
+}
+
+.rssFeed iframe {
+	height: 95% !important;
 }
 
 .calendar {
 
-	width: 65%;
-	height: 95%;
+	width: 60%;
+	height: 90%;
 	display: flex;
 	flex-direction: column;
 	justify-content: space-between;
 	align-items: center;
 
 }
+
+.calendarHeaders {
+
+	width: 100%;
+	height: 100%;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+
+}
+
+.picker * {
+	z-index: 99999;
+}
+
+/* Modes */
+.private {
+	background: url('../media/backgrounds/private_mode.png');
+}
+
+.collective {
+	background: url('../media/backgrounds/collective_mode.png');
+}
+
+.open {
+	background: url('../media/backgrounds/open_mode.png');
+}
+
+/** calendar week view */
+
+.blurry-text {
+   text-shadow: 0 0 5px white;
+   color: transparent !important;
+}
+
+.event {
+	position: absolute;
+	top: 0;
+	width: 100%;
+	display: -ms-flexbox; /* IE10 */
+	display: flex;
+	-ms-flex-wrap: wrap; /* IE10 */
+	flex-wrap: wrap;
+	z-index: 2000;
+	word-wrap: break-word;
+}
+
+.event h5 {
+	width: 100%;
+	position: absolute;
+	color: white;
+	text-align: center;
+	overflow: visible;
+	z-index: 9999;
+	margin: 0;
+}
+
+.scrollablediv {
+	overflow-y: scroll;
+}
+
+.row {
+	display: -ms-flexbox; /* IE10 */
+	display: flex;
+	-ms-flex-wrap: wrap; /* IE10 */
+	flex-wrap: wrap;
+	padding: 0px;
+	text-align: center;
+	height: 100vh;
+	width: 100%;
+}
+
+.column.hours {
+	-ms-flex: 8%; /* IE10 */
+	flex: 8%;
+	max-width: 8%;
+}
+
+.hours h4 {
+	margin: 0;
+	height: 51px;
+}
+
+.column {
+	-ms-flex: 13%; /* IE10 */
+	flex: 13%;
+	max-width: 13%;
+	padding: 0px;
+}
+
+.row .column:last-child .whiteBlock {
+	border-right: 1px solid #2D3C7788;
+}
+
+.whiteBlock:first-child {
+	border-top: 1px solid #2D3C7788;
+	margin-top: 10px;
+}
+
+.whiteBlock {
+	width: 100%;
+	height: 50px;
+	padding: 0;
+	border-left: 1px solid #2D3C7788;
+	border-bottom: 1px solid #2D3C7788;
+	position: relative;
+}
+
+.whiteBlock .row {
+	height: 100%;
+	padding-left: 1px;
+	padding-right: 1px;
+}
+
+.block-30 {
+	-ms-flex: 33%; /* IE10 */
+	flex: 33%;
+	max-width: 33%;
+	padding: 0px;
+	height: 100%;
+}
+
+.block-50 {
+	-ms-flex: 50%; /* IE10 */
+	flex: 50%;
+	max-width: 50%;
+	padding: 0px;
+	height: 100%;
+}
+
+.block-100 {
+	-ms-flex: 100%; /* IE10 */
+	flex: 100%;
+	max-width: 100%;
+	padding: 0px;
+	height: 100%;
+}
+
+.user {
+	width: 100%;
+	height: 100%;
+}
+
+#weekView h3 {
+	text-align: left;
+	color: #f65f59;
+}
+
+/***************************************************************************************************************************************/
+/************************************************************ HOME CALENDAR STYLE ******************************************************/
+/***************************************************************************************************************************************/
+
+.agenda {
+
+	width: 95%;
+	height: 100%;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	border: 1px solid gray;
+	border-radius: 5px;
+	background-color: white;
+
+}
+
+.agendaHeader {
+
+	width: 95%;
+	height: 5%;
+	display: flex;
+	flex-direction: row;
+	justify-content: center;
+	align-items: center;
+	margin-bottom: 10px;
+	margin-top: 20px;
+}
+
+.agendaHeader h3 {
+
+	text-align: center;
+	color: #2D3C77;
+	width: 80%;
+
+}
+
+.agendaHeader img {
+
+	width: 25px;
+	height: 25px;
+	border-radius: 100%;
+	cursor: pointer;
+
+}
+
+.agendaHeader img:hover {
+
+	transition: transform 0.2s linear 0s;
+	transform: scale(1.2, 1.2);
+
+}
+
+.agendaBody {
+
+	width: 90%;
+	height: 75%;
+
+}
+
+.agendaFooter {
+
+	width: 90%;
+	height: 10%;
+	display: flex;
+	flex-direction: row;
+	justify-content: space-between;
+	align-items: flex-start;
+	position: relative;
+	margin-top: 20px;
+
+}
+
+.monthsCont {
+
+	width: 100%;
+	height: 100%;
+	display: flex;
+	flex-direction: column;
+	justify-content: flex-start;
+	align-items: center;
+
+}
+
+.weeksName {
+
+	width: 100%;
+	height: 50px;
+	border-bottom: 1px solid #2D3C77;
+	display: flex;
+	flex-direction: row;
+	justify-content: center;
+	align-items: flex-start;
+	padding-bottom: 5px;
+
+}
+
+.weeksNameWeekView {
+
+	width: 100%;
+	height: 125px;
+	border-bottom: 1px solid #2D3C77;
+	display: flex;
+	flex-direction: row;
+	align-items: flex-start;
+	padding-bottom: 5px;
+
+}
+
+.weeksName h3 {
+
+	text-align: center;
+	color: #2D3C77;
+	margin-left: 9px;
+	margin-right: 23px;
+	margin-bottom: 0px;
+	width: 12.5%;
+
+}
+
+.weeksNameWeekView h3 {
+
+	text-align: center;
+	color: #2D3C77;
+	margin: 0 9px;
+	width: 10.2%;
+
+}
+
+.days {
+
+	display: flex;
+	flex-direction: row;
+	flex-wrap: wrap;
+	justify-content: flex-start;
+	align-items: flex-start;
+	width: 100%;
+	height: auto;
+
+}
+
+.daysNumb {
+
+	width: 14.1%;
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+	margin: 15px 0;
+
+}
+
+.daysNumb p {
+
+	width: auto;
+	height: 80%;
+	color: #2D3C77;
+	text-align: center;
+	font-size: 18px;
+	cursor: pointer;
+
+}
+
+.daysNumb:hover p {
+
+	transform: scale(1.4, 1.4);
+	color: #F65F59;
+
+}
+
+.eventNotification {
+
+	width: 30px;
+	min-height: 30px;
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+	margin-top: -10px;
+	margin-bottom: 0px;
+
+}
+
+.notificationBar {
+
+	margin: 1px;
+
+}
+
+.eventsOwner {
+	width: 80%;
+	display: flex;
+	flex-direction: row;
+	flex-wrap: wrap;
+	align-items: flex-start;
+}
+
+.owner {
+	width: 30%;
+
+}
+
+#bored {
+
+	width: 150px;
+	height: auto;
+	padding-top: 5px;
+	padding-bottom: 5px;
+	text-align: center;
+	font-size: 17px;
+	color: white;
+	border: 1px solid #F65F59;
+	border-radius: 5px;
+	background-color: #F65F59;
+	cursor: pointer;
+
+}
+
+.tools {
+
+	width: 15%;
+	height: 90%;
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+	align-items: center;
+
+}
+
+#addNote {
+
+	height: 250px;
+	width: 95%;
+	border: 1px solid #E9C53C;
+	background-color: #E9C53C;
+	cursor: pointer;
+
+}
+
+.toolsHeader {
+
+	width: 75%;
+	height: 20%;
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+	align-items: center;
+
+}
+
+.modes {
+
+	width: 50px;
+	height: 50%;
+	text-align: center;
+
+}
+
+.modes h3 {
+
+	text-align: left;
+	color: #2D3C77;
+	margin: 0px;
+
+}
+
+.modes p {
+
+	text-align: left;
+	font-size: 18px;
+	color: #2D3C77;
+	margin: 0px;
+
+}
+
+/* Audiowaves */
+
+div#audiowaves {
+	height: 50px;
+	width: 60px;
+	line-height: 50px;
+	position: relative;
+	text-align: right;
+}
+
+div#audiowaves > span {
+	display: none;
+	bottom: 0;
+	width: 9px;
+	height: 5px;
+	background: #F65F59;
+	position: absolute;
+}
+
+div#audiowaves.active > span {
+	animation: audio-wave 1.5s infinite ease-in-out;
+	display: block;
+}
+
+div#audiowaves.active > span:nth-child(2) {
+	left: 11px;
+	animation-delay: 0.2s;
+}
+
+div#audiowaves.active > span:nth-child(3) {
+	left: 22px;
+	animation-delay: 0.4s;
+}
+
+div#audiowaves.active > span:nth-child(4) {
+	left: 33px;
+	animation-delay: 0.6s;
+}
+
+div#audiowaves.active > span:nth-child(5) {
+	left: 44px;
+	animation-delay: 0.8s;
+}
+
+@keyframes audio-wave {
+	0% {
+		height: 5px;
+		transform: translateY(0px);
+		background: #F65F59;
+	}
+	25% {
+		height: 40px;
+		transform: translateY(20px);
+		background: #F65F59;
+	}
+	/*effect is to animate the height of each span from 5px to 30px*/
+	/*translateY makes Y axis move down to give the effect that it is growing from the center*/
+
+	50% {
+		height: 5px;
+		transform: translateY(0px);
+		background: #F65F59;
+	}
+	100% {
+		height: 5px;
+		transform: translateY(0px);
+		background: #F65F59;
+	}
+}
+
+#micro {
+
+	width: 40px;
+	height: 40px;
+	border: 1px solid #F65F59;
+	border-radius: 100%;
+	background-color: #F65F59;
+	cursor: pointer;
+	color: #ffffff;
+	line-height: 40px;
+	text-align: center;
+
+}
+
+/***************************************************************************************************************************************/
+/************************************************************ HOME WEATHER STYLE *********************************************************************/
+/***************************************************************************************************************************************/
+
+.tempDateInfo {
+
+	width: 70%;
+	height: 70px;
+	display: flex;
+	flex-direction: row;
+	justify-content: center;
+	align-items: center;
+	margin-bottom: 30px;
+
+}
+
+.temperature, .dateHour {
+
+	width: auto;
+	height: 100%;
+	padding-left: 20px;
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+
+}
+
+.temperature {
+
+	border-right: 1px solid #2D3C77;
+	padding-right: 20px;
+
+}
+
+.temperature h1, .tempName, .dateHour p, .dateHour p {
+
+	width: 100%;
+	height: auto;
+	text-align: left;
+	color: #2D3C77;
+	margin: 1px;
+
+}
+
+.temperature h1 {
+
+	font-size: 40px;
+
+}
+
+.tempName, .dateHour p, .dateHour p {
+
+	font-size: 20px;
+
+}
+
+.curDate {
+
+	position: relative;
+	top: 5px;
+
+}
+
+.weatherButts {
+
+	width: auto;
+	height: auto;
+	display: flex;
+	flex-direction: row;
+	justify-content: center;
+	align-items: center;
+	margin-bottom: -40px;
+	position: relative;
+	top: 10px;
+
+}
+
+.weatherButts img {
+
+	width: 15px;
+	height: 15px;
+	margin-left: 10px;
+	margin-right: 10px;
+	cursor: pointer;
+
+}
+
+/***************************************************************************************************************************************/
+/************************************************************ STYLE ********************************************************************/
+/***************************************************************************************************************************************/
+
+/***************************************************************************************************************************************/
+/************************************************************ STYLE ********************************************************************/
+/***************************************************************************************************************************************/

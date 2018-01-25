@@ -52,3 +52,9 @@ function array_unique_multidimensional($input)
     
     return array_intersect_key($input, $unique);
 }
+
+function zerofill($mStretch, $iLength = 2)
+{
+    $sPrintfString = '%0' . (int)$iLength . 's';
+    return sprintf($sPrintfString, $mStretch);
+}

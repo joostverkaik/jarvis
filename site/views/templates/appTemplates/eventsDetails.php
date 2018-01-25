@@ -119,6 +119,7 @@
 		justify-content: flex-start;
 		align-items: flex-start;
 		margin-top: 20px;
+		padding-bottom: 30px;
 
 	}
 

@@ -2,7 +2,7 @@ Utils = {
 
 	initXHR: function () {
 
-		let xhr;
+		var xhr;
 		if (window.XMLHttpRequest) {
 			// code for IE7+, Firefox, Chrome, Opera, Safari
 			xhr = new XMLHttpRequest();
@@ -18,7 +18,7 @@ Utils = {
 
 	sendTemplateName: function (tempName, receiver) {
 
-		let xhr = Utils.initXHR();
+		var xhr = Utils.initXHR();
 
 
 		xhr.onreadystatechange = function () {
@@ -49,16 +49,16 @@ Utils = {
 
 	weatherApi: function () {
 
-		let xhr = Utils.initXHR();
-		let tempDateInfo = document.querySelector('.weatherInfo');
-		let temperatureDeg = document.querySelector('.temperature h1');
-		let temperatureName = document.querySelector('.tempName');
+		var xhr = Utils.initXHR();
+		var tempDateInfo = document.querySelector('.weatherInfo');
+		var temperatureDeg = document.querySelector('.temperature h1');
+		var temperatureName = document.querySelector('.tempName');
 
 		xhr.onreadystatechange = function () {
 
 			if (this.readyState == 4 && this.status == 200) {
 
-				let result = JSON.parse(xhr.responseText);
+				var result = JSON.parse(xhr.responseText);
 				temperatureDeg.innerHTML = result.current.temp_c + '°';
 				temperatureName.innerHTML = result.current.condition.text;
 				tempDateInfo.style.backgroundImage = "url(" + result.current.condition.icon + ")";
@@ -85,7 +85,7 @@ Utils = {
 
 
 	singleNumber: function (month) {
-		let getMonth = month.slice(3, 5);
+		var getMonth = month.slice(3, 5);
 		if (getMonth == '01') {
 
 			getMonth = '1';

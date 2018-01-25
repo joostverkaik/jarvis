@@ -1,28 +1,23 @@
 <?php
+require $_SERVER['DOCUMENT_ROOT'] . "/jarvis/site/core/model.php";
 
-require '../../../models/ajax_requests/pdo_connection.php';
+$curEvtId = htmlentities(htmlspecialchars($_GET['curEvtId']));
 
-$pdo = pdo();
-// $dateTime = new DateTime();
-// $dayNow = $dateTime->format('j').'-'.date('m').'-'.$dateTime->format('Y');
-//$timeNow = $dateTime->format('H').":".$dateTime->format('i');
+$model = new model();
 
-$curEvtName = htmlentities(htmlspecialchars($_GET['curEvtName']));
-
-$getCurEvt = $pdo->prepare("SELECT * FROM events WHERE name=?");
-$getCurEvt->execute(array($curEvtName));
+$getCurEvt  = $model->prepare("SELECT * FROM events WHERE id = ?", [$curEvtId]);
 $getEvtData = $getCurEvt->fetch();
 
 
 function invitesStatus($status)
 {
     
-    $pdo        = pdo();
-    $curEvtName = htmlentities(htmlspecialchars($_GET['curEvtName']));
+    $pdo      = pdo();
+    $curEvtId = htmlentities(htmlspecialchars($_GET['curEvtId']));
     
     
-    $getInvites = $pdo->prepare('SELECT * FROM invites WHERE event_name=?');
-    $getInvites->execute(array($curEvtName));
+    $getInvites = $pdo->prepare('SELECT * FROM invites WHERE event_id = ?');
+    $getInvites->execute(array($curEvtId));
     $getInvitesData = $getInvites->fetch();
     
     $replace = str_replace(',', " ", $getInvitesData['invites']);
@@ -58,20 +53,21 @@ function invitesStatus($status)
 
 	<div class="editEventHeader">
 
-		<img src="../jarvis/public/media/events/eventleft.svg" alt="" id="editBackToEvent">
-		<h2>New Event</h2>
-		<h3 id="editNewEvent">Edit</h3>
+		<img src="../jarvis/public/media/events/eventleft.svg" alt="" id="backToEvent">
+		<h2>Edit event <?php echo $getEvtData['name']; ?></h2>
+		<h3 id="editNewEvent">Save</h3>
 
 	</div>
 
 	<div class="editEventBody">
 
-		<form class="editEventForm" action="" method="">
+		<form class="editEventForm" action="">
+			<input type="hidden" name="" id="eventId" placeholder="" value="<?php echo $curEvtId; ?>">
 
 			<div class="inputsCont">
 
 				<label for="">Name</label>
-				<input type="text" name="" id="eventName" placeholder="" value="<?php echo $curEvtName; ?>">
+				<input type="text" name="" id="eventName" placeholder="" value="<?php echo $getEvtData['name']; ?>">
 
 			</div>
 
@@ -111,23 +107,19 @@ function invitesStatus($status)
                     
                     ?>
 
-					<input type="checkbox" name="" id="allDay" placeholder="" value="allday" checked>
-					<label for="">All day</label>
+					<input type="checkbox" name="" id="allDay" placeholder="" value="1" checked>
+					<label for="allDay">All day</label>
                     
                     <?php
                     
                 } else {
                     
-                    {
-                        
-                        ?>
+                    ?>
 
-						<input type="checkbox" name="" id="allDay" placeholder="" value="allday">
-						<label for="">All day</label>
-                        
-                        <?php
-                        
-                    }
+					<input type="checkbox" name="" id="allDay" placeholder="" value="1">
+					<label for="allDay">All day</label>
+                    
+                    <?php
                     
                 }
                 
@@ -149,31 +141,51 @@ function invitesStatus($status)
 
 	<div class="editEventFooter">
 
-		<p>Invite</p>
-		<form action="" method="post" class="invited">
+		<p>Who is participating?</p>
+		<div class="invited">
 
 			<div class="inputsInvited">
 
-				<input type="checkbox" name="sanne" class="invitedCheckbox" value="Sanne" id="sanne">
-				<p>Sanne</p>
+				<p style="color: red;"><label><input type="checkbox" name="invitees[]" class="invitedCheckbox"
+													 value="1" checked disabled> me</label></p>
 
 			</div>
+            
+            <?php
+            $users = $model->prepare("SELECT *
+									  FROM users
+									  WHERE user_id != 1
+									  ORDER BY `firstname`", []);
+            
+            $getInvites     = $model->prepare('SELECT * FROM invites WHERE event_id = ?', [$curEvtId]);
+            $getInvitesData = array_column($getInvites->fetchAll(), 'user_id');
+            foreach ($users->fetchAll(PDO::FETCH_ASSOC) as $user) {
+                $checked = '';
+                if (in_array($user['user_id'], $getInvitesData) === true) {
+                    $checked = ' checked';
+                }
+                ?>
+				<div class="inputsInvited">
 
-			<div class="inputsInvited">
+					<p style="color: <?= $user['color'] ?>;">
+						<label><input type="checkbox" name="invitees[]"
+									  class="invitedCheckbox"
+									  value="<?= $user['user_id'] ?>"<?= $checked ?>> <?= $user['firstname'] ?>
+						</label>
+					</p>
 
-				<input type="checkbox" name="everyone" class="invitedCheckbox" value="Everyone" id="everyone">
-				<p>Everyone</p>
+				</div>
+                <?php
+            }
+            ?>
 
-			</div>
+		</div>
 
-			<div class="inputsInvited">
-
-				<input type="checkbox" name="alberto" class="invitedCheckbox" value="Alberto" id="alberto">
-				<p>Alberto</p>
-
-			</div>
-
-		</form>
+		<p>Is this a private event?</p>
+		<div class="private_event">
+			<p><label><input type="checkbox" name="private" class="privateEvent" id="private"
+							 value="1"<?= $getEvtData['private'] == '1' ? ' checked' : '' ?>> Yes</label></p>
+		</div>
 
 	</div>
 
@@ -353,8 +365,7 @@ function invitesStatus($status)
 
 	.invited {
 
-		width: 300px;
-		height: 100%;
+		width: 100%;
 		display: flex;
 		flex-direction: row;
 		flex-wrap: wrap;
@@ -365,7 +376,7 @@ function invitesStatus($status)
 
 	.inputsInvited {
 
-		width: 150px;
+		width: 25%;
 		height: auto;
 		display: flex;
 		justify-content: flex-start;

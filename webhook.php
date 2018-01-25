@@ -15,7 +15,7 @@ function format_error($errno, $errstr, $errfile, $errline)
                 <th>Error</th>
                 <td><pre>$errstr</pre></td>
             </tr>
-            <tr>
+            <tr>s
                 <th>Errno</th>
                 <td><pre>$errno</pre></td>
             </tr>
@@ -69,6 +69,9 @@ try {
 
 $action = filter_input(INPUT_GET, 'a', FILTER_SANITIZE_STRING);
 
+
+// $pb->device("iPhone van Joost")->pushNote("Opening private mode", "From Jarvis");
+
 switch ($action) {
     case "createdb":
         $db->exec(
@@ -100,73 +103,26 @@ switch ($action) {
         switch ($decoded['result']['resolvedQuery']) {
             
             case "go to weather":
-                $response_array = [
-                    'speech'      => "showing you the weather forecast",
-                    "displayText" => "Opening weather",
-                    'data'        => [],
-                    'contextOut'  => [],
-                    'source'      => "webhook"
-                ];
-                
-                break;
-            
-            case "go collective":
-                $response_array = [
-                    'speech'      => "going to collective mode",
-                    "displayText" => "Opening collective mode",
-                    'data'        => [],
-                    'contextOut'  => [],
-                    'source'      => "webhook"
-                ];
-                
-                break;
-            
-            case "go private":
-
-                // So the array below should eventually result in a positive response, which does not happen yet
-                $response_array = [
-                    'speech'      => "Something went wrong",
-                    "displayText" => "There is no response",
-                    'data'        => [],
-                    'contextOut'  => [],
-                    'source'      => "webhook"
-                ];
-        
-                \Ratchet\Client\connect('ws://b7a2c073.ngrok.io/')->then(function (\Ratchet\Client\WebSocket $conn) use
-                (
-                    $pb,
-                    &$response_array
+                \Ratchet\Client\connect('ws://joostverkaik.nl:8080/')->then(function (\Ratchet\Client\WebSocket $conn
+                ) use (
+                    $pb
                 ) {
-            
-                    /*$conn->on('message', function($msg) use ($conn) {
-                        echo "Received: {$msg}\n";
-                        $conn->close();
-                    });*/
-            
-                    $conn->send('go private');
+                    
+                    $socket_response = ['status' => 'success', 'action' => 'weather'];
+                    $conn->send(json_encode($socket_response));
                     $conn->close();
-            
-                    try {
-                        $pb->device("iPhone van Joost")->pushNote("Opening private mode", "From Jarvis");
-                        $response_array = [
-                            'speech'      => "going to private mode",
-                            "displayText" => "Opening private mode (push + websocket)",
-                            'data'        => [],
-                            'contextOut'  => [],
-                            'source'      => "webhook"
-                        ];
-                    } catch (Exception $ex) {
-                        $response_array = [
-                            'speech'      => "Something went wrong",
-                            "displayText" => $ex->getMessage(),
-                            'data'        => [],
-                            'contextOut'  => [],
-                            'source'      => "webhook"
-                        ];
-                    }
-            
-                }, function ($e) use (&$response_array) {
-            
+                    
+                    $response_array = [
+                        'speech'      => "showing you the weather forecast",
+                        "displayText" => "Opening weather",
+                        'data'        => [],
+                        'contextOut'  => [],
+                        'source'      => "webhook"
+                    ];
+                    echo json_encode($response_array);
+                    
+                }, function ($e) {
+                    
                     $response_array = [
                         'speech'      => "Something went wrong",
                         "displayText" => $e,
@@ -174,18 +130,111 @@ switch ($action) {
                         'contextOut'  => [],
                         'source'      => "webhook"
                     ];
+                    echo json_encode($response_array);
+                    
+                });
+                break;
+            
+            case "go collective":
+                \Ratchet\Client\connect('ws://joostverkaik.nl:8080/')->then(function (\Ratchet\Client\WebSocket $conn
+                ) use (
+                    $pb
+                ) {
+                    
+                    $socket_response = ['status' => 'success', 'action' => 'collective'];
+                    $conn->send(json_encode($socket_response));
+                    $conn->close();
+                    
+                    $response_array = [
+                        'speech'      => "going to collective mode",
+                        "displayText" => "Opening collective mode",
+                        'data'        => [],
+                        'contextOut'  => [],
+                        'source'      => "webhook"
+                    ];
+                    echo json_encode($response_array);
+                    
+                }, function ($e) {
+                    
+                    $response_array = [
+                        'speech'      => "Something went wrong",
+                        "displayText" => $e,
+                        'data'        => [],
+                        'contextOut'  => [],
+                        'source'      => "webhook"
+                    ];
+                    echo json_encode($response_array);
+                    
+                });
+                
+                break;
+            
+            case "go private":
+                
+                \Ratchet\Client\connect('ws://joostverkaik.nl:8080/')->then(function (\Ratchet\Client\WebSocket $conn
+                ) use (
+                    $pb
+                ) {
+                    
+                    $socket_response = ['status' => 'success', 'action' => 'private'];
+                    $conn->send(json_encode($socket_response));
+                    $conn->close();
+                    
+                    $response_array = [
+                        'speech'      => "going to private mode",
+                        "displayText" => "Opening private mode (websocket)",
+                        'data'        => [],
+                        'contextOut'  => [],
+                        'source'      => "webhook"
+                    ];
+                    echo json_encode($response_array);
+                    
+                }, function ($e) {
+                    
+                    $response_array = [
+                        'speech'      => "Something went wrong",
+                        "displayText" => $e,
+                        'data'        => [],
+                        'contextOut'  => [],
+                        'source'      => "webhook"
+                    ];
+                    echo json_encode($response_array);
+                    
                 });
                 
                 break;
             
             case "I'm done":
-                $response_array = [
-                    'speech'      => "goodbye",
-                    "displayText" => "Logging out",
-                    'data'        => [],
-                    'contextOut'  => [],
-                    'source'      => "webhook"
-                ];
+                \Ratchet\Client\connect('ws://joostverkaik.nl:8080/')->then(function (\Ratchet\Client\WebSocket $conn
+                ) use (
+                    $pb
+                ) {
+                    
+                    $socket_response = ['status' => 'success', 'action' => 'goodbye'];
+                    $conn->send(json_encode($socket_response));
+                    $conn->close();
+                    
+                    $response_array = [
+                        'speech'      => "goodbye",
+                        "displayText" => "Logging out",
+                        'data'        => [],
+                        'contextOut'  => [],
+                        'source'      => "webhook"
+                    ];
+                    echo json_encode($response_array);
+                    
+                }, function ($e) {
+                    
+                    $response_array = [
+                        'speech'      => "Something went wrong",
+                        "displayText" => $e,
+                        'data'        => [],
+                        'contextOut'  => [],
+                        'source'      => "webhook"
+                    ];
+                    echo json_encode($response_array);
+                    
+                });
                 
                 break;
             
@@ -197,11 +246,10 @@ switch ($action) {
                     'contextOut'  => [],
                     'source'      => "webhook"
                 ];
+                echo json_encode($response_array);
                 
                 break;
         }
-        
-        file_put_contents('response.html', "<pre>" . print_r($response_array, 1) . "</pre>", FILE_APPEND);
-        echo json_encode($response_array);
     
+    //file_put_contents('response.html', "<pre>" . print_r($response_array, 1) . "</pre>", FILE_APPEND);
 }

@@ -1,7 +1,6 @@
 <?php
 require "home_model.php";
 $calendar = new Calendar();
-//$calendar->display_calendar();
 $main_map = 'jarvis';
 
 ?>
@@ -13,7 +12,7 @@ $main_map = 'jarvis';
 
 </div>
 
-<div class="agengaBody">
+<div class="agendaBody">
     
     <?php $calendar->display_calendar(); ?>
 
@@ -21,7 +20,11 @@ $main_map = 'jarvis';
 
 <div class="agendaFooter">
 
-	<div class="eventsOwner">
+	<div class="eventsOwner" style="border: 1px solid #111111; padding: 5px;">
+        
+        <?php
+        echo $calendar->getUsers();
+        ?>
 
 	</div>
 

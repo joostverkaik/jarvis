@@ -71,8 +71,10 @@ class model
     {
         
         if ($this->pdo === null) {
+        	
+        	require $_SERVER['DOCUMENT_ROOT'] . "/jarvis/config.php";
             
-            $this->pdo = new PDO("mysql:host=localhost;dbname=jarvis", 'jarvis', 'JarvisUvA2018');//localhost
+            $this->pdo = new PDO($dsn, $username, $password);//localhost
             $this->pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
             
         }
