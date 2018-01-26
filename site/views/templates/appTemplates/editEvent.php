@@ -180,13 +180,22 @@ function invitesStatus($status)
             ?>
 
 		</div>
-
-		<p>Is this a private event?</p>
-		<div class="private_event">
-			<p><label><input type="checkbox" name="private" class="privateEvent" id="private"
-							 value="1"<?= $getEvtData['private'] == '1' ? ' checked' : '' ?>> Yes</label></p>
-		</div>
-
+        
+        <?php
+        if (isset($_COOKIE['current_mode']) && $_COOKIE['current_mode'] === 'private') {
+            ?>
+			<p>Is this a private event?</p>
+			<div class="private_event">
+				<p><label><input type="checkbox" name="private" class="privateEvent" id="private"
+								 value="1"<?= $getEvtData['private'] == '1' ? ' checked' : '' ?>> Yes</label></p>
+			</div>
+            <?php
+        } else {
+            ?>
+			<p>To make this a private event, make sure you are in private mode first.</p>
+            <?php
+        }
+        ?>
 	</div>
 
 </div>

@@ -8,7 +8,13 @@ $main_map = 'jarvis';
 <div class="agendaHeader">
 
 	<h3><?php echo $calendar->currentMonth(); ?></h3>
-	<img src="/<?php echo $main_map; ?>/public/media/events/addevent.svg" alt="" id="addEvents">
+	<?php
+	if (isset($_COOKIE['current_mode']) && $_COOKIE['current_mode'] !== 'open') {
+        ?>
+		<img src="/<?php echo $main_map; ?>/public/media/events/addevent.svg" alt="" id="addEvents">
+        <?php
+    }
+	?>
 
 </div>
 

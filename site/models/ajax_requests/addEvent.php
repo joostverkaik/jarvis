@@ -15,9 +15,6 @@ $eventPrivate   = htmlentities(htmlspecialchars($_GET['private']));
 $allDayVal      = htmlentities(htmlspecialchars($_GET['allDayVal']));
 $invitesArr     = json_decode($_GET['invites']);
 
-$chek_name = $pdo->prepare("SELECT `name` FROM `events` WHERE `name`=? AND start_date=?");
-$chek_name->execute(array($eventName, $eventStart));
-
 if ( !empty($allDayVal) AND count($invitesArr) > 0) {
     
     $insertEvt = $pdo->prepare('INSERT INTO `events` (`name`, location, start_date, start_time, end_date, end_time, all_day, private) VALUES(?,?,?,?,?,?,?,?)');
@@ -59,7 +56,7 @@ if ( !empty($allDayVal) AND count($invitesArr) > 0) {
     
     foreach ($invitesArr as $invite) {
         
-        $insert_invites = $pdo->prepare("INSERT INTO invites(event_id, invites) VALUES(?,?)");
+        $insert_invites = $pdo->prepare("INSERT INTO invites(event_id, user_id) VALUES(?,?)");
         $insert_invites->execute(array($insertId, $invite));
         
     }

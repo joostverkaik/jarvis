@@ -9,7 +9,13 @@ $calendar = new Calendar();
 
 	<img src="../jarvis/public/media/events/eventleft.svg" alt="" id="backToEvent">
 	<h3>Events</h3>
-	<img src="../jarvis/public/media/events/addevent.svg" alt="" id="addEvents">
+	<?php
+	if (isset($_COOKIE['current_mode']) && $_COOKIE['current_mode'] !== 'open') {
+        ?>
+		<img src="../jarvis/public/media/events/addevent.svg" alt="" id="addEvents">
+        <?php
+    }
+	?>
 
 </div>
 

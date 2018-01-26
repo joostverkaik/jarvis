@@ -86,7 +86,7 @@ $timeEnd = $dateTime->format('H') . ":" . $dateTime->format('i');
 			<div class="inputsInvited">
 
 				<p style="color: red;"><label><input type="checkbox" name="invitees[]" class="invitedCheckbox"
-								 value="1" checked disabled> me</label></p>
+													 value="1" checked disabled> me</label></p>
 
 			</div>
             
@@ -110,13 +110,23 @@ $timeEnd = $dateTime->format('H') . ":" . $dateTime->format('i');
             ?>
 
 		</div>
-		
-		<p>Is this a private event?</p>
-		<div class="private_event">
-			<p><label><input type="checkbox" name="private" id="private" class="privateEvent"
+        
+        <?php
+        if (isset($_COOKIE['current_mode']) && $_COOKIE['current_mode'] === 'private') {
+            ?>
+			<p>Is this a private event?</p>
+			<div class="private_event">
+				<p><label><input type="checkbox" name="private" id="private" class="privateEvent"
 								 value="1"> Yes</label></p>
-		</div>
-		
+			</div>
+            <?php
+        } else {
+            ?>
+			<p>To make this a private event, make sure you are in private mode first.</p>
+            <?php
+        }
+        ?>
+
 	</div>
 
 </div>
