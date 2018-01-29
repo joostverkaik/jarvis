@@ -40,4 +40,10 @@ $sql = "INSERT INTO `users` (`user_id`, `email`, `firstname`, `lastname`, `color
 (4, 'jeroen@bos.nl', 'Jeroen', 'Bos', '#BFB5AF', '', '');";
 $pdo->query($sql);
 
+$sql = "TRUNCATE TABLE `notes`;";
+$pdo->query($sql);
+
+$sql = "TRUNCATE TABLE `notes_shares`;";
+$pdo->query($sql);
+
 echo 'Database reset done';
