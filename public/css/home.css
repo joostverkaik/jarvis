@@ -8,7 +8,7 @@ html, body {
 
 body,
 html {
-  position: fixed;
+	position: fixed;
 }
 
 h3 {
@@ -17,6 +17,10 @@ h3 {
 
 h4 {
 	color: #2D3C77;
+}
+
+textarea:focus, input:focus{
+    outline: none;
 }
 
 .background {
@@ -37,6 +41,60 @@ header .users {
 .gsapAnim {
 	/*opacity: 0;*/
 }
+
+.invited {
+
+	width: 100%;
+	display: flex;
+	flex-direction: row;
+	flex-wrap: wrap;
+	justify-content: flex-start;
+	align-content: flex-start;
+
+}
+
+.inputsInvited {
+
+	width: 25%;
+	height: auto;
+	display: flex;
+	justify-content: flex-start;
+	align-content: flex-start;
+	align-items: center;
+
+}
+
+.inputsInvited p {
+
+	margin-left: 5px;
+	color: #2D3C77;
+	font-size: 17px;
+	position: relative;
+	bottom: 5px;
+
+}
+
+.inputsInvited span {
+	border: 1px solid #2D3C77;
+	background-color: white;
+	border-radius: 3px;
+	display: inline-block;
+	width: 22px;
+	height: 22px;
+}
+.invitedCheckbox {
+	background-color: white;
+	width: 16px;
+	height: 16px;
+	margin-top: 3px;
+    -webkit-appearance:button;
+	border-radius: 3px;
+
+}
+.invitedCheckbox:checked {
+    background-color: #ccc;
+}
+
 
 .homeCore {
 
@@ -164,8 +222,8 @@ header .users {
 /** calendar week view */
 
 .blurry-text {
-   text-shadow: 0 0 5px white;
-   color: transparent !important;
+	text-shadow: 0 0 5px white;
+	color: transparent !important;
 }
 
 .event {
@@ -486,11 +544,13 @@ header .users {
 	width: 30%;
 
 }
+
 .owner span {
 	display: block;
 	padding: 4px;
 	margin: 0 3px 0 0;
 }
+
 .owner span i.fa {
 	display: none;
 }
@@ -501,6 +561,7 @@ header .users {
 	border-radius: 3px;
 	padding: 2px;
 }
+
 .owner span.filterActive i.fa {
 	display: block;
 	float: right;
@@ -511,6 +572,7 @@ header .users {
 #resetFilter {
 	width: 100%;
 }
+
 #resetFilter button {
 	border: 1px solid red;
 	background-color: red;

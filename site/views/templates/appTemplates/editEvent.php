@@ -109,8 +109,8 @@ $getEvtData = $getCurEvt->fetch();
 
 			<div class="inputsInvited">
 
-				<p style="color: red;"><label><input type="checkbox" name="invitees[]" class="invitedCheckbox"
-													 value="1" checked disabled> me</label></p>
+				<p style="color: red;"><label><span><input type="checkbox" name="invitees[]" class="invitedCheckbox"
+													 value="1" checked disabled></span> me</label></p>
 
 			</div>
             
@@ -131,9 +131,9 @@ $getEvtData = $getCurEvt->fetch();
 				<div class="inputsInvited">
 
 					<p style="color: <?= $user['color'] ?>;">
-						<label><input type="checkbox" name="invitees[]"
+						<label><span><input type="checkbox" name="invitees[]"
 									  class="invitedCheckbox"
-									  value="<?= $user['user_id'] ?>"<?= $checked ?>> <?= $user['firstname'] ?>
+									  value="<?= $user['user_id'] ?>"<?= $checked ?>></span> <?= $user['firstname'] ?>
 						</label>
 					</p>
 

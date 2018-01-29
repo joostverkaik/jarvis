@@ -86,8 +86,8 @@ $timeEnd = $dateTime->format('H') . ":" . $dateTime->format('i');
 
 			<div class="inputsInvited">
 
-				<p style="color: red;"><label><input type="checkbox" name="invitees[]" class="invitedCheckbox"
-													 value="1" checked disabled> me</label></p>
+				<p style="color: red;"><label><span><input type="checkbox" name="invitees[]" class="invitedCheckbox"
+													 value="1" checked disabled></span> me</label></p>
 
 			</div>
             
@@ -101,9 +101,9 @@ $timeEnd = $dateTime->format('H') . ":" . $dateTime->format('i');
             foreach ($users->fetchAll(PDO::FETCH_ASSOC) as $user) {
                 ?>
 				<div class="inputsInvited">
-					<p style="color: <?= $user['color'] ?>;"><label><input type="checkbox" name="invitees[]"
+					<p style="color: <?= $user['color'] ?>;"><label><span><input type="checkbox" name="invitees[]"
 																		   class="invitedCheckbox"
-																		   value="<?= $user['user_id'] ?>"> <?= $user['firstname'] ?>
+																		   value="<?= $user['user_id'] ?>"></span> <?= $user['firstname'] ?>
 						</label></p>
 				</div>
                 <?php
@@ -301,38 +301,6 @@ $timeEnd = $dateTime->format('H') . ":" . $dateTime->format('i');
 		color: #2D3C77;
 		margin-bottom: 5px;
 		height: auto;
-
-	}
-
-	.invited {
-
-		width: 100%;
-		display: flex;
-		flex-direction: row;
-		flex-wrap: wrap;
-		justify-content: flex-start;
-		align-content: flex-start;
-
-	}
-
-	.inputsInvited {
-
-		width: 25%;
-		height: auto;
-		display: flex;
-		justify-content: flex-start;
-		align-content: flex-start;
-		align-items: center;
-
-	}
-
-	.inputsInvited p {
-
-		margin-left: 5px;
-		color: #2D3C77;
-		font-size: 17px;
-		position: relative;
-		bottom: 5px;
 
 	}
 

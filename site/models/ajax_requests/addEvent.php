@@ -120,4 +120,3 @@ if ( !empty($allDayVal) AND count($invitesArr) > 0) {
     echo "Event succesful added";
     
 }
-
