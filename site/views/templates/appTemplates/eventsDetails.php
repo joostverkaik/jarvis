@@ -38,7 +38,7 @@
 
 	.evtDisplayHeader img:hover {
 
-		transition: transform 0.3 linera 0s;
+		transition: transform 0.3 linear 0s;
 		transform: scale(1.3, 1.3);
 
 	}
@@ -63,7 +63,7 @@
 
 	.evtDisplayHeader h3:hover {
 
-		transition: transform 0.3 linera 0s;
+		transition: transform 0.3 linear 0s;
 		transform: scale(1.3, 1.3);
 
 	}

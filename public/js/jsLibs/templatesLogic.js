@@ -60,7 +60,6 @@ EventsTemplate = {
 
 
 		var invites = EventsTemplate.checkBoxs('invitedCheckbox');
-		console.log(invites);
 
 		var xhr = Utils.initXHR();
 
@@ -71,14 +70,22 @@ EventsTemplate = {
 
 				//receiver.innerHTML = xhr.responseText;
 				alert(xhr.responseText);
-				Utils.goHomeEvent();
+				//Utils.goHomeEvent();
+
+				var eventStartDay = eventStart.substr(0, 2);
+				var eventStartMonth = eventStart.substr(3, 2);
+
+				$.ajax('site/models/eventHome.php')
+					.done(function (data) {
+						$('.agenda').html(data);
+						EventsTemplate.displayEvents(eventStartDay, eventStartMonth)
+					});
 
 			}
 
 		};
 
-
-		if (eventName != "" && eventStart != "" && eventEnd != "" && eventTimeStart != "" && eventTimeEnd != "") {
+		if (eventName !== "" && eventStart !== "" && eventEnd !== "" && eventTimeStart !== "" && eventTimeEnd !== "") {
 
 			xhr.open('GET', '../jarvis/site/models/ajax_requests/addEvent.php?eventName=' + eventName + '&eventLocation=' + eventLocation + '&eventStart=' + eventStart + '&eventEnd=' + eventEnd + '&eventTimeStart=' + eventTimeStart + '&eventTimeEnd=' + eventTimeEnd + '&private=' + eventPrivateVal + '&allDayVal=' + allDayVal + '&invites=' + JSON.stringify(invites), true);
 			xhr.send();
@@ -99,16 +106,20 @@ EventsTemplate = {
 		var months_name = ['', 'January', 'Februari', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'Oktober', 'November', 'December'];
 		var parsedCurMonth;
 
-		if (months_name.indexOf(curMonth) < 10) {
-
-			parsedCurMonth = '0' + months_name.indexOf(curMonth);
-
-		} else {
-
-			parsedCurMonth = months_name.indexOf(curMonth);
-
+		if (curMonth.length === 2) {
+			parsedCurMonth = curMonth
 		}
+		else {
+			if (months_name.indexOf(curMonth) < 10) {
 
+				parsedCurMonth = '0' + months_name.indexOf(curMonth);
+
+			} else {
+
+				parsedCurMonth = months_name.indexOf(curMonth);
+
+			}
+		}
 
 		xhr.onreadystatechange = function () {
 
@@ -121,7 +132,7 @@ EventsTemplate = {
 
 				evtDetails.innerHTML = results;
 
-				$('.event').each(function(i, el) {
+				$('.event').each(function (i, el) {
 					if (parseInt($(el).data('id')) > 0) {
 						$(el).click(function () {
 							var eventId = $(el).data('id');
@@ -274,6 +285,15 @@ EventsTemplate = {
 
 					alert(xhr.responseText);
 
+					var eventStartDay = eventStart.substr(0, 2);
+					var eventStartMonth = eventStart.substr(3, 2);
+
+					$.ajax('site/models/eventHome.php')
+						.done(function (data) {
+							$('.agenda').html(data);
+							EventsTemplate.displayEvents(eventStartDay, eventStartMonth)
+						});
+
 				}
 
 			};
@@ -294,28 +314,40 @@ EventsTemplate = {
 
 	},
 
-
-	deleteEvent: function (evtName) {
+	deleteEvent: function (evtId) {
 
 		$("#deleteEvt").click(function () {
 
-			var xhr = Utils.initXHR();
+			var eventStartDay = $(this).data('day');
+			var eventStartMonth = $(this).data('month');
 
-			xhr.onreadystatechange = function () {
+			if (confirm('Are you sure that you want to delete this event?')) {
 
-				if (this.readyState == 4 && this.status == 200) {
+				var xhr = Utils.initXHR();
 
-					alert(xhr.responseText);
+				xhr.onreadystatechange = function () {
 
-				}
+					if (this.readyState == 4 && this.status == 200) {
 
-			};
+						alert(xhr.responseText);
+
+						$.ajax('site/models/eventHome.php')
+							.done(function (data) {
+								$('.agenda').html(data);
+								EventsTemplate.displayEvents(eventStartDay, eventStartMonth)
+							});
+
+					}
+
+				};
 
 
-			xhr.open('GET', '../jarvis/site/models/ajax_requests/deleteEvent.php?curEvtName=' + evtName, true);
-			xhr.send();
+				xhr.open('GET', '../jarvis/site/models/ajax_requests/deleteEvent.php?curEvtId=' + evtId, true);
+				xhr.send();
 
-		})
+			}
+
+		});
 
 	}
 

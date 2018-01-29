@@ -7,15 +7,15 @@ $calendar = new Calendar();
 
 <div class="agendaHeader">
 
-	<img src="../jarvis/public/media/events/eventleft.svg" alt="" id="backToEvent">
+	<img src="../jarvis/public/media/events/eventleft.svg" alt="" id="backToHome">
 	<h3>Events</h3>
-	<?php
-	if (isset($_COOKIE['current_mode']) && $_COOKIE['current_mode'] !== 'open') {
+    <?php
+    if (isset($_COOKIE['current_mode']) && $_COOKIE['current_mode'] !== 'open') {
         ?>
 		<img src="../jarvis/public/media/events/addevent.svg" alt="" id="addEvents">
         <?php
     }
-	?>
+    ?>
 
 </div>
 
@@ -26,15 +26,29 @@ $calendar = new Calendar();
 
 <div class="agendaFooter">
 
-	<div class="eventsOwner" style="border: 1px solid #111111; padding: 5px;">
+	<div class="eventsOwner" style="padding: 5px;">
         
         <?php
         echo $calendar->getUsers();
+        
+        if (isset($_COOKIE['filter']) && $_COOKIE['filter'] > 0) {
+            ?>
+			<p id="resetFilter" style="display: block;">
+				<button>Reset filter</button>
+			</p>
+            <?php
+        } else {
+            ?>
+			<p id="resetFilter" style="display: none;">
+				<button>Reset filter</button>
+			</p>
+            <?php
+        }
         ?>
 
 	</div>
 
-	<button id="bored">Suggest activities</button>
+	<button id="bored">I am bored</button>
 
 </div>
 

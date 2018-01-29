@@ -83,12 +83,26 @@ class Calendar extends model
         
         $return = '';
         foreach ($users->fetchAll(PDO::FETCH_ASSOC) as $user) {
-            $return .= '
-			<div class="owner" style="color: ' . $user['color'] . '">
-                ' . $user['firstname'] . '
-			</div>
-			';
+            if ($_COOKIE['filter'] == $user['user_id']) {
+                $return .= '
+					<div class="owner" style="color: ' . $user['color'] . '" data-id="' . $user['user_id'] . '">
+						<span class="filterActive">
+							' . $user['firstname'] . '
+							<i class="fa fa-times-circle" aria-hidden="true"></i>
+						</span>
+					</div>
+					';
+            } else {
+                $return .= '
+					<div class="owner" style="color: ' . $user['color'] . '" data-id="' . $user['user_id'] . '">
+						<span>
+							' . $user['firstname'] . '
+						</span>
+					</div>
+					';
+            }
         }
+        
         return $return;
     }
     
@@ -121,38 +135,81 @@ class Calendar extends model
     
     public function eventNotifier($eventDay)
     {
+        
         if (isset($_COOKIE['current_mode']) && $_COOKIE['current_mode'] !== 'open') {
-            $eventNotificationAuthors = $this->PDO()->prepare("SELECT u.`firstname`, u.color
+            
+            if (isset($_COOKIE['filter']) && $_COOKIE['filter'] > 0) {
+            	
+            	$filter = intval($_COOKIE['filter']);
+                
+                $eventNotificationAuthors = $this->PDO()->prepare("SELECT u.`firstname`, u.color
+													FROM users u
+													LEFT JOIN events e
+													ON u.user_id = e.added_by
+													WHERE e.`start_date` = ?
+													  AND u.user_id = ?");
+                
+                $eventNotificationInvitees = $this->PDO()->prepare("SELECT u.firstname, u.color
+													FROM invites i
+													LEFT JOIN events e
+													ON i.event_id = e.id
+													LEFT JOIN users u
+													ON i.user_id = u.user_id
+													WHERE e.`start_date` = ?
+													  AND i.user_id = ?");
+                
+                $eventNotificationAuthors->execute(array(date('Y-m-d', strtotime($eventDay)), $filter));
+                $eventNotificationInvitees->execute(array(date('Y-m-d', strtotime($eventDay)), $filter));
+                
+                $eventNotification = array_merge($eventNotificationAuthors->fetchAll(PDO::FETCH_ASSOC),
+                    $eventNotificationInvitees->fetchAll(PDO::FETCH_ASSOC));
+                $eventNotification = array_unique_multidimensional($eventNotification);
+                if (count($eventNotification) > 0) {
+                    
+                    foreach ($eventNotification as $displayNotificationBar) {
+                        
+                        ?>
+
+						<hr class="notificationBar"
+							style="border: 1px solid <?= $displayNotificationBar['color'] ?>; width: 100%; color: <?= $displayNotificationBar['color'] ?>;" />
+                        
+                        <?php
+                        
+                    }
+                }
+            } else {
+                $eventNotificationAuthors = $this->PDO()->prepare("SELECT u.`firstname`, u.color
 													FROM users u
 													LEFT JOIN events e
 													ON u.user_id = e.added_by
 													WHERE e.`start_date` = ?");
-    
-            $eventNotificationInvitees = $this->PDO()->prepare("SELECT u.firstname, u.color
+                
+                $eventNotificationInvitees = $this->PDO()->prepare("SELECT u.firstname, u.color
 													FROM invites i
 													LEFT JOIN events e
 													ON i.event_id = e.id
 													LEFT JOIN users u
 													ON i.user_id = u.user_id
 													WHERE e.`start_date` = ?");
-    
-            $eventNotificationAuthors->execute(array($eventDay));
-            $eventNotificationInvitees->execute(array($eventDay));
-    
-            $eventNotification = array_merge($eventNotificationAuthors->fetchAll(PDO::FETCH_ASSOC),
-                $eventNotificationInvitees->fetchAll(PDO::FETCH_ASSOC));
-            $eventNotification = array_unique_multidimensional($eventNotification);
-            if (count($eventNotification) > 0) {
-        
-                foreach ($eventNotification as $displayNotificationBar) {
-            
-                    ?>
+                
+                $eventNotificationAuthors->execute(array(date('Y-m-d', strtotime($eventDay))));
+                $eventNotificationInvitees->execute(array(date('Y-m-d', strtotime($eventDay))));
+                
+                $eventNotification = array_merge($eventNotificationAuthors->fetchAll(PDO::FETCH_ASSOC),
+                    $eventNotificationInvitees->fetchAll(PDO::FETCH_ASSOC));
+                $eventNotification = array_unique_multidimensional($eventNotification);
+                if (count($eventNotification) > 0) {
+                    
+                    foreach ($eventNotification as $displayNotificationBar) {
+                        
+                        ?>
 
-					<hr class="notificationBar"
-						style="border: 1px solid <?= $displayNotificationBar['color'] ?>; width: 100%; color: <?= $displayNotificationBar['color'] ?>;" />
-            
-                    <?php
-            
+						<hr class="notificationBar"
+							style="border: 1px solid <?= $displayNotificationBar['color'] ?>; width: 100%; color: <?= $displayNotificationBar['color'] ?>;" />
+                        
+                        <?php
+                        
+                    }
                 }
             }
         }

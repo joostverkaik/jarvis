@@ -1,6 +1,6 @@
 <div class="tools">
 
-	<img src="" alt="" id="addNote">
+	<img src="public/media/notes/new_note.png" alt="" id="addNote">
 
 	<div class="toolsHeader">
 
@@ -22,4 +22,8 @@
 
 	</div>
 
+</div>
+
+<div id="note" style="display:none; cursor: default">
+	<canvas id="draw_note" height="300" width="450"></canvas>
 </div>

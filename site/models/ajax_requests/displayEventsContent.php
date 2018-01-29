@@ -16,9 +16,17 @@ while ($displayEvt = $getEvent->fetch()) {
 	<div class="evtDisplayHeader">
 
 		<img src="../jarvis/public/media/events/eventleft.svg" alt="" id="backToEvent"
-			 data-date="<?= $displayEvt['start_date'] ?>">
+			 data-day="<?= date('d', strtotime($displayEvt['start_date'])) ?>"
+			 data-month="<?= date('m', strtotime($displayEvt['start_date'])) ?>">
 		<h2>Event details</h2>
-		<h3 id="editEvent">Edit</h3>
+		
+		<?php
+		if ($displayEvt['added_by'] === '1') {
+            ?>
+			<h3 id="editEvent">Edit</h3>
+            <?php
+        }
+		?>
 
 	</div>
 
@@ -34,15 +42,15 @@ while ($displayEvt = $getEvent->fetch()) {
 			<p><?php echo 'From ' . $displayEvt['start_time'] . ' to ' . $displayEvt['end_time']; ?></p>
 
 		</div>
-		
-		<?php
-		$getInvites = $pdo->prepare('SELECT i.*, u.firstname, u.color
+        
+        <?php
+        $getInvites = $pdo->prepare('SELECT i.*, u.firstname, u.color
 									 FROM invites i
 									 LEFT JOIN users u
 									 ON u.user_id = i.user_id
 									 WHERE i.event_id = ?');
-		$getInvites->execute([$displayEvt['id']]);
-		if ($getInvites->rowCount() > 0) {
+        $getInvites->execute([$displayEvt['id']]);
+        if ($getInvites->rowCount() > 0) {
             ?>
 			<h4>Invited household members:</h4>
 			<div class="eventsOwner">
@@ -59,7 +67,7 @@ while ($displayEvt = $getEvent->fetch()) {
 			</div>
             <?php
         }
-		?>
+        ?>
 
 		<div class="alert">
 
@@ -83,11 +91,9 @@ while ($displayEvt = $getEvent->fetch()) {
 
 	<div class="evtDisplayFooter">
 
-		<div class="evtInvites">
-
-		</div>
-
-		<h4 id="deleteEvt">Delete event</h4>
+		<h4 id="deleteEvt"
+			data-day="<?= date('d', strtotime($displayEvt['start_date'])) ?>"
+			data-month="<?= date('m', strtotime($displayEvt['start_date'])) ?>">Delete event</h4>
 
 	</div>
     

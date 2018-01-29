@@ -18,7 +18,8 @@ $timeEnd = $dateTime->format('H') . ":" . $dateTime->format('i');
 
 	<div class="addEventHeader">
 
-		<img src="../jarvis/public/media/events/eventleft.svg" alt="" id="backToEvent">
+		<img src="../jarvis/public/media/events/eventleft.svg" alt="" id="backToEvent"
+			 data-day="<?= $dateTime->format('d') ?>" data-month="<?= $dateTime->format('m') ?>">
 		<h2>New Event</h2>
 		<h3 id="addNewEvent">Save</h3>
 
@@ -26,7 +27,7 @@ $timeEnd = $dateTime->format('H') . ":" . $dateTime->format('i');
 
 	<div class="addEventBody">
 
-		<form class="addEventForm" action="" method="">
+		<form class="addEventForm" action="">
 
 			<div class="inputsCont">
 
@@ -122,6 +123,7 @@ $timeEnd = $dateTime->format('H') . ":" . $dateTime->format('i');
             <?php
         } else {
             ?>
+			<input type="hidden" name="private" id="private" class="privateEvent" value="0">
 			<p>To make this a private event, make sure you are in private mode first.</p>
             <?php
         }

@@ -69,9 +69,6 @@ try {
 
 $action = filter_input(INPUT_GET, 'a', FILTER_SANITIZE_STRING);
 
-
-// $pb->device("iPhone van Joost")->pushNote("Opening private mode", "From Jarvis");
-
 switch ($action) {
     case "createdb":
         $db->exec(

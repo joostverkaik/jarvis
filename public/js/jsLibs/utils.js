@@ -34,15 +34,8 @@ Utils = {
 		};
 
 
-		xhr.open('GET', '../jarvis/site/models/' + tempName + '.php', true);
+		xhr.open('GET', '../jarvis/site/models/' + tempName, true);
 		xhr.send();
-
-	},
-
-
-	goHomeEvent: function () {
-
-		Utils.sendTemplateName('calendar', 'calendar');
 
 	},
 
@@ -77,7 +70,7 @@ Utils = {
 
 	parse_month: function (month) {
 
-		monthArr = ['', 'January', 'Februari', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'Oktober', 'November', 'December'];
+		var monthArr = ['', 'January', 'Februari', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'Oktober', 'November', 'December'];
 
 		return monthArr[month];
 

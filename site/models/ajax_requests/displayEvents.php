@@ -5,11 +5,26 @@ $pdo = pdo();
 
 $current_mode = $_COOKIE['current_mode'];
 
+$filter = intval($_COOKIE['filter']);
+
 $dateNumb = htmlentities(htmlspecialchars($_GET['dateNumb']));
 $curMonth = htmlentities(htmlspecialchars($_GET['curMonth']));
 $curYear  = date('Y');
 
 $date = $dateNumb . '-' . $curMonth . '-' . $curYear;
+
+$dto = new DateTime();
+$dto->setISODate($curYear, date('W', strtotime($date)));
+$week_start_sql = $dto->format('Y-m-d');
+$dto->modify('+7 days');
+$week_end_sql = $dto->format('Y-m-d');
+
+$events = $pdo->prepare("SELECT e.*, u.color
+						 FROM events e
+						 LEFT JOIN users u
+						 ON u.user_id = e.added_by
+						 WHERE e.start_date BETWEEN ? AND ?");
+$events->execute([$week_start_sql, $week_end_sql]);
 
 $dto = new DateTime();
 $dto->setISODate($curYear, date('W', strtotime($date)));
@@ -25,25 +40,75 @@ $period = new DatePeriod(
 
 $period_array = iterator_to_array($period);
 
-$events = $pdo->prepare("SELECT e.*, u.color
-						 FROM events e
-						 LEFT JOIN users u
-						 ON u.user_id = e.added_by
-						 WHERE e.start_date BETWEEN ? AND ?");
-$events->execute([$week_start, $week_end]);
-
 $events_array = [];
 foreach ($events->fetchAll(PDO::FETCH_ASSOC) as $event) {
-    $events_array[$event['start_date']][substr($event['start_time'], 0, 2)][$event['id']] = $event;
     
-    $invitees = $pdo->prepare("SELECT i.*, u.color
+    if ($filter > 0) {
+        if ($event['added_by'] == $filter) {
+            $events_array[$event['start_date']][substr($event['start_time'], 0, 2)][$event['id']] = $event;
+            
+            $invitees = $pdo->prepare("SELECT i.*, u.color
 							   FROM invites i
 							   LEFT JOIN users u
 							   ON u.user_id = i.user_id
 							   WHERE i.event_id = ?");
-    $invitees->execute([$event['id']]);
-    $events_array[$event['start_date']][substr($event['start_time'], 0,
-        2)][$event['id']]['invitees'] = $invitees->fetchAll();
+            $invitees->execute([$event['id']]);
+            
+            $events_array[$event['start_date']][substr($event['start_time'], 0,
+                2)][$event['id']]['invitees'] = $invitees->fetchAll();
+        }
+    } else {
+        $events_array[$event['start_date']][substr($event['start_time'], 0, 2)][$event['id']] = $event;
+        
+        $invitees = $pdo->prepare("SELECT i.*, u.color
+							   FROM invites i
+							   LEFT JOIN users u
+							   ON u.user_id = i.user_id
+							   WHERE i.event_id = ?");
+        $invitees->execute([$event['id']]);
+        
+        $events_array[$event['start_date']][substr($event['start_time'], 0,
+            2)][$event['id']]['invitees'] = $invitees->fetchAll();
+    }
+}
+
+if ($filter > 0) {
+    $sharedEvents = $pdo->prepare("SELECT e.id
+							   FROM invites i
+							   LEFT JOIN users u
+							   ON u.user_id = i.user_id
+							   LEFT JOIN events e
+							   ON e.id = i.event_id
+							   WHERE u.user_id = ?
+						  		 AND e.start_date BETWEEN ? AND ?");
+    $sharedEvents->execute([$filter, $week_start_sql, $week_end_sql]);
+    
+    if ($sharedEvents->rowCount() > 0) {
+     
+    	$sharedEventsData = array_column($sharedEvents->fetchAll(), 'id');
+        $events = $pdo->prepare("SELECT e.*, u.color
+						 FROM events e
+						 LEFT JOIN users u
+						 ON u.user_id = e.added_by
+						 WHERE e.id IN (" . str_repeat('?, ', $sharedEvents->rowCount() - 1) . "?)");
+        $events->execute($sharedEventsData);
+        
+        foreach ($events->fetchAll(PDO::FETCH_ASSOC) as $event) {
+        	if (!isset($events_array[$event['start_date']][substr($event['start_time'], 0, 2)][$event['id']])) {
+                $events_array[$event['start_date']][substr($event['start_time'], 0, 2)][$event['id']] = $event;
+        
+                $invitees = $pdo->prepare("SELECT i.*, u.color
+							   FROM invites i
+							   LEFT JOIN users u
+							   ON u.user_id = i.user_id
+							   WHERE i.event_id = ?");
+                $invitees->execute([$event['id']]);
+        
+                $events_array[$event['start_date']][substr($event['start_time'], 0,
+                    2)][$event['id']]['invitees'] = $invitees->fetchAll();
+            }
+        }
+    }
 }
 
 ?>
@@ -102,12 +167,12 @@ foreach ($events->fetchAll(PDO::FETCH_ASSOC) as $event) {
 			<div class="column" style="position: relative;">
                 <?php
                 if ($current_mode !== 'open') {
-                    $events_day = isset($events_array[$date->format('d-m-Y')]) ? $events_array[$date->format('d-m-Y')] : [];
+                    $events_day = isset($events_array[$date->format('Y-m-d')]) ? $events_array[$date->format('Y-m-d')] : [];
                     for ($i = 0; $i < 24; $i++) {
                         ?>
 						<div class="whiteBlock" data-date="<?= $date->format('d-m-Y') . " " . $i . ":00:00" ?>"></div>
                         <?php
-                
+                        
                         if (isset($events_day[zerofill($i, 2)]) && count($events_day[zerofill($i, 2)]) > 0) {
                             foreach ($events_day[zerofill($i, 2)] as $event) {
                                 $d1           = new DateTime($event['start_date'] . " " . $event['start_time']);
@@ -119,24 +184,20 @@ foreach ($events->fetchAll(PDO::FETCH_ASSOC) as $event) {
                                 
                                 $event_name = '';
                                 if ($current_mode == 'private') {
-                                	if ($event['added_by'] == '1') {
-                                		$event_name = $event['name'];
-									}
-									elseif ($event['added_by'] != '1' && $event['private'] == '0') {
-                                		$event_name = $event['name'];
-									}
-									elseif ($event['added_by'] != '1' && $event['private'] == '1') {
-                                		$event_name = 'Private event';
-									}
-								}
-								elseif ($current_mode == 'collective') {
-                                	if ($event['private'] == '1') {
-                                		$event_name = 'Private event';
-									}
-									else {
-                                		$event_name = $event['name'];
-									}
-								}
+                                    if ($event['added_by'] == '1') {
+                                        $event_name = $event['name'];
+                                    } elseif ($event['added_by'] != '1' && $event['private'] == '0') {
+                                        $event_name = $event['name'];
+                                    } elseif ($event['added_by'] != '1' && $event['private'] == '1') {
+                                        $event_name = 'Private event';
+                                    }
+                                } elseif ($current_mode == 'collective') {
+                                    if ($event['private'] == '1') {
+                                        $event_name = 'Private event';
+                                    } else {
+                                        $event_name = $event['name'];
+                                    }
+                                }
                                 ?>
 								<div class="event"
 									 style="top: <?= ($i * 51) + 10 ?>px; height: <?= ($pixels * 51) ?>px;"
@@ -171,6 +232,6 @@ foreach ($events->fetchAll(PDO::FETCH_ASSOC) as $event) {
 			</div>
             <?php
         }
-		?>
+        ?>
 	</div>
 </div>

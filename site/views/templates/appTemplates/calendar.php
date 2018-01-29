@@ -30,15 +30,30 @@ $main_map = mainMap();
 
 	<div class="agendaFooter">
 
-		<div class="eventsOwner" style="border: 1px solid #111111; padding: 5px;">
+		<div class="eventsOwner" style="padding: 5px;">
             
             <?php
             echo $calendar->getUsers();
+            
+            if (isset($_COOKIE['filter']) && $_COOKIE['filter'] > 0) {
+                ?>
+				<p id="resetFilter" style="display: block;">
+					<button>Reset filter</button>
+				</p>
+                <?php
+            } else {
+                ?>
+				<p id="resetFilter" style="display: none;">
+					<button>Reset filter</button>
+				</p>
+                <?php
+            }
             ?>
+			?>
 
 		</div>
 
-		<button id="bored">Suggest activities</button>
+		<button id="bored">I am bored</button>
 
 	</div>
 

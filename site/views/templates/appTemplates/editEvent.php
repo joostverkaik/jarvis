@@ -8,52 +8,15 @@ $model = new model();
 $getCurEvt  = $model->prepare("SELECT * FROM events WHERE id = ?", [$curEvtId]);
 $getEvtData = $getCurEvt->fetch();
 
-
-function invitesStatus($status)
-{
-    
-    $pdo      = pdo();
-    $curEvtId = htmlentities(htmlspecialchars($_GET['curEvtId']));
-    
-    
-    $getInvites = $pdo->prepare('SELECT * FROM invites WHERE event_id = ?');
-    $getInvites->execute(array($curEvtId));
-    $getInvitesData = $getInvites->fetch();
-    
-    $replace = str_replace(',', " ", $getInvitesData['invites']);
-    
-    $invitesObj = explode(" ", $replace);
-    
-    $count_invitesObj = count($invitesObj);
-    
-    $invitesStatus = 'checked';
-    
-    for ($i = 0; $i < $count_invitesObj; $i++) {
-        
-        if ($_POST[$status] == $invitesObj[$i]) {
-            
-            $invitesStatus = "checked";
-            
-        } else {
-            
-            $invitesStatus = "";
-            
-        }
-        
-    }
-    
-    return $invitesStatus;
-    
-}
-
-
 ?>
 
 <div class="editEventCont">
 
 	<div class="editEventHeader">
 
-		<img src="../jarvis/public/media/events/eventleft.svg" alt="" id="backToEvent">
+		<img src="../jarvis/public/media/events/eventleft.svg" alt="" id="backToEvent"
+			 data-day="<?= date('d', strtotime($getEvtData['start_date'])) ?>"
+			 data-month="<?= date('m', strtotime($getEvtData['start_date'])) ?>">
 		<h2>Edit event <?php echo $getEvtData['name']; ?></h2>
 		<h3 id="editNewEvent">Save</h3>
 
@@ -84,7 +47,7 @@ function invitesStatus($status)
 
 				<label for="">Starts</label>
 				<input type="text" name="" id="eventStart" placeholder=""
-					   value="<?php echo $getEvtData['start_date']; ?>">
+					   value="<?php echo date('d-m-Y', strtotime($getEvtData['start_date'])); ?>">
 				<input type="text" name="" id="eventTimeStart" placeholder=""
 					   value="<?php echo $getEvtData['start_time']; ?>">
 
@@ -93,7 +56,7 @@ function invitesStatus($status)
 			<div class="inputsCont dateTime">
 
 				<label for="">Ends</label>
-				<input type="text" name="" id="eventEnd" placeholder="" value="<?php echo $getEvtData['end_date']; ?>">
+				<input type="text" name="" id="eventEnd" placeholder="" value="<?php echo date('d-m-Y', strtotime($getEvtData['end_date'])); ?>">
 				<input type="text" name="" id="eventTimeEnd" placeholder="End time"
 					   value="<?php echo $getEvtData['end_time']; ?>">
 
@@ -192,6 +155,7 @@ function invitesStatus($status)
             <?php
         } else {
             ?>
+			<input type="hidden" name="private" id="private" class="privateEvent" value="0">
 			<p>To make this a private event, make sure you are in private mode first.</p>
             <?php
         }

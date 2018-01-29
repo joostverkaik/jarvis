@@ -1,8 +1,8 @@
 <?php
 
-$calendar      = new Calendar();
-$curretDteTime = $calendar->currentDay();
-$main_map      = mainMap();
+$calendar        = new Calendar();
+$currentDateTime = $calendar->currentDay();
+$main_map        = mainMap();
 
 ?>
 
@@ -12,8 +12,8 @@ $main_map      = mainMap();
 
 		setInterval(function () {
 
-			"<?php $curretDteTime = $calendar->currentDay(); ?>"
-			$(".time_now").html("<?php echo $curretDteTime['timeNow'];?>");
+			"<?php $currentDateTime = $calendar->currentDay(); ?>"
+			$(".time_now").html("<?php echo $currentDateTime['timeNow'];?>");
 
 
 		}, 1000);
@@ -49,15 +49,8 @@ $main_map      = mainMap();
 	<div class="dateHour">
 
 		<p class="time_now"></p>
-		<p class="curDate"><?php echo $curretDteTime['dateNow']; ?></p>
+		<p class="curDate"><?php echo $currentDateTime['dateNow']; ?></p>
 
 	</div>
-
-</div>
-
-<div class="weatherButts">
-
-	<img src="../<?php echo $main_map; ?>/public/media/weather/weatherl.svg" alt="" id="weatherR">
-	<img src="../<?php echo $main_map; ?>/public/media/weather/weatherr.svg" alt="" id="weatherL">
 
 </div>

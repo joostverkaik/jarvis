@@ -6,6 +6,11 @@ html, body {
 
 }
 
+body,
+html {
+  position: fixed;
+}
+
 h3 {
 	font-family: 'Hind', sans-serif;
 }
@@ -24,8 +29,9 @@ h4 {
 	opacity: 0;
 }
 
-header div {
-	z-index: 999;
+header .homeCore > div,
+header .users {
+	z-index: 2;
 }
 
 .gsapAnim {
@@ -338,7 +344,7 @@ header div {
 .agendaFooter {
 
 	width: 90%;
-	height: 10%;
+	height: 20%;
 	display: flex;
 	flex-direction: row;
 	justify-content: space-between;
@@ -400,8 +406,12 @@ header div {
 	text-align: center;
 	color: #2D3C77;
 	margin: 0 9px;
-	width: 10.2%;
+	width: 10.8%;
 
+}
+
+.weeksNameWeekView h3:first-of-type {
+	width: 6%;
 }
 
 .days {
@@ -476,6 +486,37 @@ header div {
 	width: 30%;
 
 }
+.owner span {
+	display: block;
+	padding: 4px;
+	margin: 0 3px 0 0;
+}
+.owner span i.fa {
+	display: none;
+}
+
+.owner span.filterActive {
+	display: block;
+	border: 1px solid #0070C0;
+	border-radius: 3px;
+	padding: 2px;
+}
+.owner span.filterActive i.fa {
+	display: block;
+	float: right;
+	padding-top: 3px;
+	color: #000;
+}
+
+#resetFilter {
+	width: 100%;
+}
+#resetFilter button {
+	border: 1px solid red;
+	background-color: red;
+	color: white;
+	width: 200px;
+}
 
 #bored {
 
@@ -506,12 +547,13 @@ header div {
 
 #addNote {
 
-	height: 250px;
 	width: 95%;
-	border: 1px solid #E9C53C;
-	background-color: #E9C53C;
 	cursor: pointer;
 
+}
+
+#draw_note {
+	z-index: 99999;
 }
 
 .toolsHeader {

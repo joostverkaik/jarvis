@@ -8,13 +8,13 @@ $main_map = 'jarvis';
 <div class="agendaHeader">
 
 	<h3><?php echo $calendar->currentMonth(); ?></h3>
-	<?php
-	if (isset($_COOKIE['current_mode']) && $_COOKIE['current_mode'] !== 'open') {
+    <?php
+    if (isset($_COOKIE['current_mode']) && $_COOKIE['current_mode'] !== 'open') {
         ?>
 		<img src="/<?php echo $main_map; ?>/public/media/events/addevent.svg" alt="" id="addEvents">
         <?php
     }
-	?>
+    ?>
 
 </div>
 
@@ -25,15 +25,33 @@ $main_map = 'jarvis';
 </div>
 
 <div class="agendaFooter">
-
-	<div class="eventsOwner" style="border: 1px solid #111111; padding: 5px;">
-        
-        <?php
-        echo $calendar->getUsers();
+    
+    <?php
+    if (isset($_COOKIE['current_mode']) && $_COOKIE['current_mode'] !== 'open') {
         ?>
+		<div class="eventsOwner" style="padding: 5px;">
+            <?php
+            echo $calendar->getUsers();
+            
+            if (isset($_COOKIE['filter']) && $_COOKIE['filter'] > 0) {
+                ?>
+				<p id="resetFilter" style="display: block;">
+					<button>Reset filter</button>
+				</p>
+                <?php
+            } else {
+                ?>
+				<p id="resetFilter" style="display: none;">
+					<button>Reset filter</button>
+				</p>
+                <?php
+            }
+            ?>
+		</div>
 
-	</div>
-
-	<button id="bored">I am bored</button>
+		<button id="bored">I am bored</button>
+        <?php
+    }
+    ?>
 
 </div>
