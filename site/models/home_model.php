@@ -22,8 +22,18 @@ class Calendar extends model
         'December'
     ];
     
-    public function __construct()
+    private $curYear;
+    private $curMonth;
+    
+    public function __construct($month = false, $year = false)
     {
+    	
+    	if ($month !== false) {
+    		$this->curMonth = $month;
+		}
+		if ($year !== false) {
+    		$this->curYear = $year;
+		}
         
         parent::__construct();
         
@@ -60,7 +70,7 @@ class Calendar extends model
         $dayNumb = $date->format('j');
         $month   = $this->currentMonth();
         
-        $current_day = $dayName . ' ' . $dayNumb . ' ' . substr($month, 0, 3);
+        $current_day = $dayName . ' ' . $dayNumb . ' ' . $month;
         
         $hour        = $date->format('H');
         $min         = $date->format('i');
@@ -109,16 +119,30 @@ class Calendar extends model
     
     public function agenda()
     {
+     
+    	if (isset($this->curMonth)) {
+    		$month = $this->curMonth;
+		}
+		else {
+    		$month = $this->currentMonthNumb();
+    		$this->curMonth = $month;
+		}
+		
+		if (isset($this->curYear)) {
+    		$currentYear = $this->curYear;
+		}
+		else {
+    		$currentYear = date('Y');
+    		$this->curYear = $currentYear;
+		}
         
-        $currentYear = date('Y');
-        $date        = new DateTime($currentYear . '-' . $this->currentMonthNumb() . '-01');
+        $date        = new DateTime($currentYear . '-' . $month . '-01');
         $calendar    = array();
         
         while ($date->format('Y') <= $currentYear) {
             
             $year   = $date->format('Y');
-            $months = /*$this->months_name[$date->format('n')-1];*/
-                $this->currentMonth();
+            $months = /*$date->format('m')*/$this->currentMonthNumb();
             $days   = $date->format('j');
             $weeks  = str_replace(0, 7, $this->days_name[$date->format('w')]);
             
@@ -225,7 +249,7 @@ class Calendar extends model
             
             ?>
 
-			<div class="monthsCont" id="<?php echo $months . date('Y'); ?>">
+			<div class="monthsCont" id="<?php echo $months . date('Y'); ?>" data-month="<?=$this->curMonth?>" data-year="<?=$this->curYear?>">
 
 				<div class="weeksName">
                     
@@ -304,22 +328,6 @@ class Calendar extends model
 				</div>
 
 			</div>
-
-			<script type="text/javascript">
-
-				$(function () {
-
-					var monthsCont = document.querySelector('.monthsCont');
-					var agengaBody = document.querySelector('.agengaBody');
-					for (var i = 0; i < monthsCont.length; i++) {
-
-						agengaBody.appendChild(monthsCont);
-
-					}
-
-				})
-
-			</script>
             
             <?php
             

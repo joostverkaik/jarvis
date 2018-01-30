@@ -21,6 +21,9 @@
 	<title>Home</title>
 </head>
 <body class="open">
+<div class="changeMode goOpen" data-mode="open"></div>
+<div class="changeMode goCollective" data-mode="collective"></div>
+<div class="changeMode goPrivate" data-mode="private"></div>
 
 <div class="background"></div>
 
@@ -37,8 +40,21 @@
 		<div class="nieuws">
 
 			<div class="weatherInfo gsapAnim">
-                
-                <?php renderTemplate("homeWeather"); ?>
+				<div class="weatherInfoPage currentWeather dragend-page" style="align-items: center;">
+                    <?php
+                    renderTemplate("homeWeather");
+                    ?>
+				</div>
+				<div class="weatherInfoPage dragend-page" style="align-items: left;">
+					<?php
+                    renderTemplate("homeWeatherHourly");
+                    ?>
+				</div>
+				<div class="weatherInfoPage dragend-page" style="align-items: left;">
+					<?php
+                    renderTemplate("homeWeatherForecast");
+                    ?>
+				</div>
 
 			</div>
 
@@ -68,6 +84,12 @@
 	</div>
 
 </header>
+
+<div id="map" style="display: none;"></div>
+
+<div id="boredDialog">
+	<div id="boredContent"></div>
+</div>
 
 </body>
 

@@ -1,13 +1,32 @@
 <?php
 require "home_model.php";
-$calendar = new Calendar();
+if (isset($_GET['month']) && isset($_GET['year'])) {
+    $calendar = new Calendar($_GET['month'], $_GET['year']);
+    $curDate  = new DateTime($_GET['year'] . "-" . $_GET['month'] . "-01");
+} else {
+    $calendar = new Calendar();
+    $curDate  = new DateTime();
+}
+$prevDate = clone $curDate;
+$prevDate->modify("previous month");
+$prevMonth = $prevDate->format('m');
+$prevYear  = $prevDate->format('Y');
+
+$nextDate = clone $curDate;
+$nextDate->modify("next month");
+$nextMonth = $nextDate->format('m');
+$nextYear  = $nextDate->format('Y');
+
 $main_map = 'jarvis';
 
 ?>
 
 <div class="agendaHeader">
 
+	<!--<img src="../jarvis/public/media/events/eventleft.svg" alt="" id="prevMonth" data-month="<?= $prevMonth ?>" data-year="<?= $prevYear ?>">-->
 	<h3><?php echo $calendar->currentMonth(); ?></h3>
+	<!--<img src="../jarvis/public/media/events/eventright.svg" alt="" id="nextMonth" data-month="<?= $nextMonth ?>" data-year="<?= $nextYear ?>">-->
+    
     <?php
     if (isset($_COOKIE['current_mode']) && $_COOKIE['current_mode'] !== 'open') {
         ?>

@@ -1,4 +1,6 @@
 <div class="tools">
+	
+	<img src="public/media/logo.svg" alt="Jarvis" id="Jarvis">
 
 	<img src="public/media/notes/new_note.png" alt="" id="addNote">
 
@@ -25,7 +27,7 @@
 </div>
 
 <div id="note" style="display:none; cursor: default; color: #000;">
-	<canvas id="draw_note" height="300" width="550"></canvas>
+	<canvas id="draw_note" height="300" width="450"></canvas>
 
 	<p style="width: 100%; border-top: 1px solid #000; color: #000;">Share with:</p>
 	<div class="invited">
@@ -65,6 +67,7 @@
     }
     ?>
 	<p>
+		<button id="clearNote">Clear note</button>
 		<button id="saveNote">Save note</button>
 	</p>
 </div>

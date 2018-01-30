@@ -39,32 +39,71 @@ Utils = {
 
 	},
 
+	pad: function (n, width, z) {
+		z = z || '0';
+		n = n + '';
+		return n.length >= width ? n : new Array(width - n.length + 1).join(z) + n;
+	},
+
 
 	weatherApi: function () {
 
-		var xhr = Utils.initXHR();
-		var tempDateInfo = document.querySelector('.weatherInfo');
-		var temperatureDeg = document.querySelector('.temperature h1');
-		var temperatureName = document.querySelector('.tempName');
+		var tempDateInfo = $('.currentWeather');
+		var temperatureDeg = $('.temperature h1');
+		var temperatureName = $('.tempName');
 
-		xhr.onreadystatechange = function () {
+		var weekday = new Array(7);
+		weekday[0] = "su";
+		weekday[1] = "mo";
+		weekday[2] = "tu";
+		weekday[3] = "we";
+		weekday[4] = "th";
+		weekday[5] = "fr";
+		weekday[6] = "sa";
 
-			if (this.readyState == 4 && this.status == 200) {
+		$.get('https://api.apixu.com/v1/forecast.json?key=1549521ef1e546d6ae3133207183001&q=Amsterdam&days=8')
+			.done(function (result) {
+				console.log(result);
+				temperatureDeg.html(result.current.temp_c + '&deg;');
+				temperatureName.html(result.current.condition.text);
+				tempDateInfo.css({backgroundImage: "url(" + result.current.condition.icon + ")"});
 
-				var result = JSON.parse(xhr.responseText);
-				temperatureDeg.innerHTML = result.current.temp_c + '°';
-				temperatureName.innerHTML = result.current.condition.text;
-				tempDateInfo.style.backgroundImage = "url(" + result.current.condition.icon + ")";
+				var curDate = new Date();
+				var curHour = curDate.getHours();
+				console.log(curHour);
 
-			}
+				var hourly = result.forecast.forecastday[0].hour;
+				var num = 0;
+				if (curHour > 17) {
+					var latest = 23;
+				}
+				else {
+					latest = curHour + 7;
+				}
+				for (var i = curHour; i < latest; i++) {
 
-		};
+					var hour = hourly[i];
 
+					var divHour = $(".tempDateInfoHour[data-num='" + num + "']");
+					divHour.find('h1').html(hour.time.substr(10, 3) + "<small>" + hour.time.substr(14, 3) + "</small>");
+					divHour.find('.weatherIcon').html('<img src="' + hour.condition.icon + '" width="28">');
+					divHour.find('.tempCelsius').html(Math.round(hour.temp_c) + '&deg;');
+					num++;
+				}
 
-		xhr.open('GET', 'https://api.apixu.com/v1/current.json?key=6e0a9a8f2fd144aaa11105306181801&q=Amsterdam', true);
-		xhr.send();
+				for (var j = 0; j < result.forecast.forecastday.length; j++) {
 
+					var forecast = result.forecast.forecastday[j];
+					var forecastDate = new Date(forecast.date);
+					var dayOfWeek = weekday[forecastDate.getDay()];
 
+					var divDay = $(".tempDateInfoDay[data-num='" + j + "']");
+					divDay.find('h1').html(dayOfWeek);
+					divDay.find('.weatherIcon').html('<img src="' + forecast.day.condition.icon + '" width="28">');
+					divDay.find('.tempCelsius').html(Math.round(forecast.day.avgtemp_c) + '&deg;');
+
+				}
+			});
 	},
 
 

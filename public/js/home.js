@@ -1,7 +1,6 @@
 $(function () {
 
-	var current_mode = 'collective',
-		allowed_modes = ['open', 'collective', 'private'],
+	var current_mode = 'open',
 		current_page = '',
 		last_event = '';
 	Cookies.set('filter', '', {path: ''});
@@ -10,9 +9,31 @@ $(function () {
 	backToHome();
 	changeUser();
 
+	/* Weather */
+	$(".weatherInfo").dragend({
+		direction: 'horizontal'
+	});
+	setInterval(function () {
+		var date = new Date;
+
+		var minutes = Utils.pad(date.getMinutes(), 2);
+		var hour = Utils.pad(date.getHours(), 2);
+		$(".time_now").html(hour + ":" + minutes);
+
+
+	}, 1000);
+
+	//  let weather = Utils.weatherApi();
+	setInterval(Utils.weatherApi(), 5000);
+
+	/* Utils */
 	function is_touch_device() {
 		return 'ontouchstart' in window        // works on most browsers
 			|| navigator.maxTouchPoints;       // works on IE10/11 and Surface
+	}
+
+	function getRandomArbitrary(min, max) {
+		return Math.random() * (max - min) + min;
 	}
 
 	document.ontouchmove = function (event) {
@@ -43,6 +64,32 @@ $(function () {
 		xhr.send();
 
 	}
+
+	$(document).on('click', '#prevMonth', function (e) {
+
+		current_page = 'backToHome';
+
+		var receiver = document.querySelector('.agenda');
+
+		var tempName = 'eventHome';
+		var xhr = Utils.initXHR();
+
+
+		xhr.onreadystatechange = function () {
+
+			if (this.readyState == 4 && this.status == 200) {
+
+				receiver.innerHTML = xhr.responseText;
+
+			}
+
+		};
+
+
+		xhr.open('GET', '../jarvis/site/models/' + tempName + '.php?month=' + $(this).data('month') + '&year=' + $(this).data('year'), true);
+		xhr.send();
+
+	});
 
 	$(document).on('click', '#backToHome', backToHome);
 
@@ -276,45 +323,6 @@ $(function () {
 		}
 	});
 
-	/*var CanvasDrawr = function (options) {
-		var canvas = document.getElementById(options.id), ctxt = canvas.getContext("2d");
-		ctxt.lineWidth = options.size || Math.ceil(Math.random() * 35);
-		ctxt.lineCap = options.lineCap || "round";
-		ctxt.pX = undefined;
-		ctxt.pY = undefined;
-		var lines = [, ,];
-		var offset = $(canvas).offset();
-		var self = {
-			init: function () {
-				canvas.addEventListener('touchstart', self.preDrawTouch, false);
-				canvas.addEventListener('touchmove', self.drawTouch, false);
-			}, preDrawTouch: function (event) {
-				$.each(event.touches, function (i, touch) {
-					var id = touch.identifier;
-					lines[id] = {x: this.pageX - offset.left, y: this.pageY - offset.top};
-				});
-				event.preventDefault();
-			}, drawTouch: function (event) {
-				$.each(event.touches, function (i, touch) {
-					var id = touch.identifier, moveX = this.pageX - offset.left - lines[id].x,
-						moveY = this.pageY - offset.top - lines[id].y;
-					var ret = self.move(id, moveX, moveY);
-					lines[id].x = ret.x;
-					lines[id].y = ret.y;
-				});
-				event.preventDefault();
-			}, move: function (i, changeX, changeY) {
-				ctxt.strokeStyle = 'black';
-				ctxt.beginPath();
-				ctxt.moveTo(lines[i].x, lines[i].y);
-				ctxt.lineTo(lines[i].x + changeX, lines[i].y + changeY);
-				ctxt.stroke();
-				ctxt.closePath();
-				return {x: lines[i].x + changeX, y: lines[i].y + changeY};
-			}
-		};
-		return self.init();
-	};*/
 	function getPosition(mouseEvent, sigCanvas) {
 		var rect = sigCanvas.getBoundingClientRect();
 		return {
@@ -339,11 +347,12 @@ $(function () {
 		Y: y - sigCanvas.offsetTop
 	  };
 	}*/
+	var context;
 
 	function initialize(canvas_id) {
 		// get references to the canvas element as well as the 2D drawing context
 		var sigCanvas = document.getElementById(canvas_id);
-		var context = sigCanvas.getContext("2d");
+		context = sigCanvas.getContext("2d");
 		context.strokeStyle = "#000000";
 		context.lineJoin = "round";
 		context.lineWidth = 2;
@@ -467,7 +476,7 @@ $(function () {
 				color: '#fff',
 				border: '',
 				top: '15%',
-				width: '550px'
+				width: '450px'
 			},
 			overlayCSS: {
 				cursor: 'default'
@@ -481,7 +490,6 @@ $(function () {
 	});
 
 	$(document).on('click', '#saveNote', saveNote);
-
 	function saveNote() {
 
 		var serialized_drawing = canvas.toDataURL();
@@ -509,13 +517,66 @@ $(function () {
 				'invites': JSON.stringify(invites)
 			}
 		})
-			.done(function (data) {
+			.done(function () {
+				if (current_mode !== 'open') {
+					fetchNotes();
+				}
+				$.unblockUI();
+				context.clearRect(0, 0, canvas.width, canvas.height);
+				$('#note').find('.invitedCheckbox').prop('checked', false);
+			});
+	}
 
+	$(document).on('click', '#clearNote', clearNote);
+	function clearNote() {
+		context.clearRect(0, 0, canvas.width, canvas.height);
+	}
+
+	function fetchNotes() {
+		$.ajax({
+			method: 'GET',
+			url: 'site/models/ajax_requests/fetchNotes.php',
+			data: {
+				'user_id': 1
+			}
+		})
+			.done(function (data) {
+				$('.displayNote').remove();
+				data = JSON.parse(data);
+				$.each(data, function (i, row) {
+					var random_x = Math.floor(getRandomArbitrary(50, 1000));
+					var random_y = Math.floor(getRandomArbitrary(50, 500));
+					var notes_div = $('<div class="displayNote" style="top: ' + random_y + 'px; left: ' + random_x + 'px;"></div>');
+					notes_div.html('<img src="' + row['note']['data'] + '"><p><button class="dismissNote" data-id="' + row['note']['note_id'] + '">Dismiss note</button>&nbsp;&nbsp;&nbsp;' + row['shares'] + '</p>');
+					$('body').append(notes_div);
+					notes_div.draggable();
+					notes_div.resizable({
+						aspectRatio: 450 / 350
+					});
+				});
+			});
+	}
+
+	$(document).on('click', '.dismissNote', dismissNote);
+
+	function dismissNote(e) {
+
+		var target = $(e.target);
+		$.ajax({
+			method: 'GET',
+			url: 'site/models/ajax_requests/dismissNote.php',
+			data: {
+				'note_id': target.data('id')
+			}
+		})
+			.done(function () {
+				fetchNotes();
 			});
 	}
 
 	$("#micro").click(function () {
 
+		$(this).addClass('active');
 		$('#audiowaves').addClass('active');
 
 		setTimeout(function () {
@@ -551,7 +612,7 @@ $(function () {
 
 	socket.onmessage = function (msg) {
 		var response = JSON.parse(msg.data);
-		console.log(response);
+		$('#micro').removeClass('active');
 		$('#audiowaves').removeClass('active');
 
 		if (response.action === 'private') {
@@ -559,31 +620,34 @@ $(function () {
 			current_mode_span.html('private');
 			$('.background').css({'background-image': "url('public/media/backgrounds/private_mode.png')"})
 				.animate({opacity: 1}, {duration: 750});
-			changeUser();
 			Cookies.set('current_mode', 'private', {path: ''});
 			current_mode = 'private';
 			eval(current_page + "()");
+			changeUser();
+			fetchNotes();
 		}
 		else if (response.action === 'collective') {
 			console.log('collective');
 			current_mode_span.html('collective');
 			$('.background').css({'background-image': "url('public/media/backgrounds/collective_mode.png')"})
 				.animate({opacity: 1}, {duration: 750});
-			changeUser();
 			Cookies.set('current_mode', 'collective', {path: ''});
 			current_mode = 'collective';
 			console.log(current_page);
 			eval(current_page + "()");
+			changeUser();
+			fetchNotes();
 		}
 		else if (response.action === 'goodbye') {
 			console.log('goodbye');
 			current_mode_span.html('open');
 			$('.background').css({'background-image': ""})
 				.animate({opacity: 0}, {duration: 750});
-			changeUser();
 			Cookies.set('current_mode', 'open', {path: ''});
 			current_mode = 'open';
 			eval(current_page + "()");
+			changeUser();
+			$('.displayNote').remove();
 		}
 		else if (response.action === 'weather') {
 			console.log('weather');
@@ -594,5 +658,121 @@ $(function () {
 		}
 
 	};
+
+	$('.changeMode').click(function () {
+		$('#micro').removeClass('active');
+		$('#audiowaves').removeClass('active');
+
+		if ($(this).hasClass('goOpen')) {
+			console.log('goodbye');
+			current_mode_span.html('open');
+			$('.background').css({'background-image': ""})
+				.animate({opacity: 0}, {duration: 750});
+			Cookies.set('current_mode', 'open', {path: ''});
+			current_mode = 'open';
+			eval(current_page + "()");
+			changeUser();
+			$('.displayNote').remove();
+		}
+		else if ($(this).hasClass('goCollective')) {
+			console.log('collective');
+			current_mode_span.html('collective');
+			$('.background').css({'background-image': "url('public/media/backgrounds/collective_mode.png')"})
+				.animate({opacity: 1}, {duration: 750});
+			Cookies.set('current_mode', 'collective', {path: ''});
+			current_mode = 'collective';
+			console.log(current_page);
+			eval(current_page + "()");
+			changeUser();
+			fetchNotes();
+		}
+		else if ($(this).hasClass('goPrivate')) {
+			console.log('private');
+			current_mode_span.html('private');
+			$('.background').css({'background-image': "url('public/media/backgrounds/private_mode.png')"})
+				.animate({opacity: 1}, {duration: 750});
+			Cookies.set('current_mode', 'private', {path: ''});
+			current_mode = 'private';
+			changeUser();
+			eval(current_page + "()");
+			fetchNotes();
+		}
+	});
+
+
+	$("#boredDialog").dialog({
+		autoOpen: false,
+		height: 600,
+		width: 600,
+		modal: true,
+		title: 'Activity suggestions',
+		hide: {
+			effect: "explode",
+			duration: 400
+		},
+		open: function (event, ui) {
+			$('#boredContent').empty();
+			var map;
+			var service;
+
+			var amsterdam = new google.maps.LatLng(52.354516, 4.955957);
+
+			map = new google.maps.Map(document.getElementById('map'), {
+				center: amsterdam,
+				zoom: 17
+			});
+
+			var possible_types = ['museum', 'cafe', 'park', 'zoo', 'shopping_mall'];
+			var selected_type = possible_types[Math.floor(Math.random() * possible_types.length)];
+
+			var request = {
+				location: amsterdam,
+				radius: '3000',
+				type: [selected_type]
+			};
+
+			service = new google.maps.places.PlacesService(map);
+			service.nearbySearch(request, callback);
+
+			function callback(results, status) {
+				if (status === google.maps.places.PlacesServiceStatus.OK) {
+					for (var i = 0; i < results.length; i++) {
+						console.log(results[i]);
+						var open_now = '<span style="color: orange;"><i class="fa fa-question-circle" aria-hidden="true"></i></span>';
+						var show = false;
+						if (results[i].hasOwnProperty('opening_hours')) {
+							if (results[i].opening_hours.open_now === true) {
+								open_now = '<span style="color: green;"><i class="fa fa-check-circle" aria-hidden="true"></i></span>';
+								show = true;
+							}
+							else {
+								open_now = '<span style="color: red;"><i class="fa fa-cross-circle" aria-hidden="true"></i></span>';
+							}
+						}
+
+						var rating = '-';
+						if (results[i].hasOwnProperty('rating')) {
+							rating = results[i].rating;
+						}
+
+						var row = $('<div class="boredRow">' +
+							'<img src="' + results[i].icon + '" width="50"><p style="display: inline-block; margin-left: 10px;"><strong>' + results[i].name + '</strong><br>' +
+							'Open now: ' + open_now + ' | Rating: ' + rating + '/5<br>' +
+							'Address: ' + results[i].vicinity +
+							'</p></div>');
+						if (show === true) {
+							$('#boredContent').append(row);
+						}
+					}
+				}
+
+			}
+		}
+	});
+
+	$(document).on('click', '#bored', function () {
+
+		$("#boredDialog").dialog('open');
+	});
 
 });

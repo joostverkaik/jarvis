@@ -112,7 +112,7 @@ if ($filter > 0) {
 }
 
 ?>
-<div class="monthsCont" id="January2018">
+<div class="monthsCont">
 
 	<div class="weeksNameWeekView">
 		<h3>&nbsp;</h3>

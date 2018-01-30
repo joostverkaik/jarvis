@@ -8,7 +8,7 @@ html, body {
 
 body,
 html {
-	position: fixed;
+	/*position: fixed;*/
 }
 
 h3 {
@@ -19,8 +19,13 @@ h4 {
 	color: #2D3C77;
 }
 
-textarea:focus, input:focus{
-    outline: none;
+textarea:focus, input:focus {
+	outline: none;
+}
+
+#Jarvis {
+	border: 1px solid gray;
+	border-radius: 20px;
 }
 
 .background {
@@ -33,13 +38,31 @@ textarea:focus, input:focus{
 	opacity: 0;
 }
 
+.changeMode {
+	position: absolute;
+	top: 0;
+	width: 50px;
+	height: 50px;
+	z-index: 10;
+	border-top: 1px solid #ccc;
+}
+.changeMode.goOpen {
+	right: 110px;
+}
+.changeMode.goCollective {
+	right: 55px;
+}
+.changeMode.goPrivate {
+	right: 0;
+}
+
 header .homeCore > div,
 header .users {
 	z-index: 2;
 }
 
 .gsapAnim {
-	/*opacity: 0;*/
+	opacity: 0;
 }
 
 .invited {
@@ -82,19 +105,20 @@ header .users {
 	width: 22px;
 	height: 22px;
 }
+
 .invitedCheckbox {
 	background-color: white;
 	width: 16px;
 	height: 16px;
 	margin-top: 3px;
-    -webkit-appearance:button;
+	-webkit-appearance: button;
 	border-radius: 3px;
 
 }
-.invitedCheckbox:checked {
-    background-color: #ccc;
-}
 
+.invitedCheckbox:checked {
+	background-color: #ccc;
+}
 
 .homeCore {
 
@@ -145,23 +169,6 @@ header .users {
 	align-items: center;
 
 }
-
-.weatherInfo {
-
-	width: 95%;
-	height: 30%;
-	display: flex;
-	flex-direction: column;
-	justify-content: center;
-	align-items: center;
-	border: 1px solid gray;
-	border-radius: 5px;
-	background-repeat: no-repeat;
-	background-position: left top;
-	background-color: white;
-
-}
-
 .rssFeed {
 
 	width: 95%;
@@ -618,6 +625,24 @@ header .users {
 	z-index: 99999;
 }
 
+.displayNote {
+	position: absolute;
+	width: 450px;
+	height: 350px;
+	z-index: 10;
+	background-color: #EDC438;
+	border: 1px solid #BDB7A6;
+	-ms-transform: rotate(10deg); /* IE 9 */
+	-webkit-transform: rotate(10deg); /* Safari */
+	transform: rotate(10deg);
+	-webkit-box-shadow: 0px 0px 15px 0px rgba(0, 0, 0, 0.6);
+	-moz-box-shadow: 0px 0px 15px 0px rgba(0, 0, 0, 0.6);
+	box-shadow: 0px 0px 15px 0px rgba(0, 0, 0, 0.6);
+}
+.displayNote img {
+	width: 100%;
+}
+
 .toolsHeader {
 
 	width: 75%;
@@ -626,6 +651,9 @@ header .users {
 	flex-direction: column;
 	justify-content: space-between;
 	align-items: center;
+	border: 1px solid gray;
+	border-radius: 5px;
+	background-color: white;
 
 }
 
@@ -733,25 +761,97 @@ div#audiowaves.active > span:nth-child(5) {
 	background-color: #F65F59;
 	cursor: pointer;
 	color: #ffffff;
+	margin-bottom: 10px;
 	line-height: 40px;
 	text-align: center;
 
+}
+#micro:hover {
+	border-color: #c43932;
+	background-color: #c43932;
+}
+
+#micro.active {
+	border-color: #c43932;
+	background-color: #c43932;
 }
 
 /***************************************************************************************************************************************/
 /************************************************************ HOME WEATHER STYLE *********************************************************************/
 /***************************************************************************************************************************************/
 
+.weatherInfo {
+	width: 95%;
+	height: 30%;
+	border: 1px solid gray;
+	border-radius: 5px;
+	background-color: white;
+}
+
+.weatherInfoPage {
+	display: flex !important;
+	flex-direction: column;
+	justify-content: center;
+
+}
+
+.currentWeather {
+	background-repeat: no-repeat;
+	background-position: left top;
+}
+
 .tempDateInfo {
 
 	width: 70%;
-	height: 70px;
+	height: 100px;
 	display: flex;
 	flex-direction: row;
 	justify-content: center;
 	align-items: center;
 	margin-bottom: 30px;
 
+}
+
+.tempDateInfoWeek, .tempDateInfoHourly {
+
+	width: 99%;
+	height: 100px;
+	display: flex;
+	flex-direction: row;
+	justify-content: center;
+	align-items: center;
+	margin-bottom: 30px;
+
+}
+
+.tempDateInfoDay, .tempDateInfoHour {
+
+	width: 15%;
+	height: 100%;
+	text-align: center;
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+	align-items: center;
+	color: #2D3C77;
+	border-right: 1px solid #2D3C77;
+
+}
+.tempDateInfoDay:last-child, .tempDateInfoHour:last-child {
+	border-right: 0;
+}
+
+.tempDateInfoDay h1, .tempDateInfoHour h1 {
+	font-size: 20px;
+	font-weight: normal;
+	margin-top: 0;
+}
+.tempDateInfoHour h1 small {
+	font-size: 14px;
+}
+
+.weatherIcon, .tempCelsius {
+	display: block;
 }
 
 .temperature, .dateHour {
@@ -833,3 +933,8 @@ div#audiowaves.active > span:nth-child(5) {
 /***************************************************************************************************************************************/
 /************************************************************ STYLE ********************************************************************/
 /***************************************************************************************************************************************/
+
+.ui-widget-overlay {
+	background: #000000;
+	opacity: 0.6;
+}
