@@ -31,8 +31,8 @@ function renderTemplate($default)
 <link rel="stylesheet" type="text/css" href="/<?php echo $main_map; ?>/public/css/default.date.css" />
 <link rel="stylesheet" type="text/css" href="/<?php echo $main_map; ?>/public/css/default.time.css" />
 <link rel="stylesheet" type="text/css" href="/<?php echo $main_map; ?>/public/js/jquery-ui/jquery-ui.css" />
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js"></script>
-<script src="https://code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
+<script src="/<?php echo $main_map; ?>/public/js/jquery/jquery.min.js"></script>
+<script src="/<?php echo $main_map; ?>/public/js/jquery-ui/jquery-ui.min.js"></script>
 <script src="/<?php echo $main_map; ?>/public/js/jsLibs/jquery.ui.touch-punch.min.js"></script>
 <script src="/<?php echo $main_map; ?>/public/js/jsLibs/dragend.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/1.20.3/TweenMax.min.js"></script>

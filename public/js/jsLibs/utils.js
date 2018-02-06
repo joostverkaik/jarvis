@@ -73,22 +73,22 @@ Utils = {
 				console.log(curHour);
 
 				var hourly = result.forecast.forecastday[0].hour;
-				var num = 0;
-				if (curHour > 17) {
-					var latest = 23;
+				var hourlyForecast = hourly.slice(curHour);
+				var remaining = 24 - curHour;
+				if (remaining < 7) {
+					var getNextDay = 7 - remaining;
+					var hourlyNextDay = result.forecast.forecastday[1].hour.slice(0, getNextDay);
+					hourly = hourlyForecast.concat(hourlyNextDay);
 				}
-				else {
-					latest = curHour + 7;
-				}
-				for (var i = curHour; i < latest; i++) {
+
+				for (var i = 0; i < 7; i++) {
 
 					var hour = hourly[i];
 
-					var divHour = $(".tempDateInfoHour[data-num='" + num + "']");
+					var divHour = $(".tempDateInfoHour[data-num='" + i + "']");
 					divHour.find('h1').html(hour.time.substr(10, 3) + "<small>" + hour.time.substr(14, 3) + "</small>");
 					divHour.find('.weatherIcon').html('<img src="' + hour.condition.icon + '" width="28">');
 					divHour.find('.tempCelsius').html(Math.round(hour.temp_c) + '&deg;');
-					num++;
 				}
 
 				for (var j = 0; j < result.forecast.forecastday.length; j++) {

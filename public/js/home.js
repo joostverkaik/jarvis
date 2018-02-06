@@ -10,9 +10,44 @@ $(function () {
 	changeUser();
 
 	/* Weather */
-	$(".weatherInfo").dragend({
-		direction: 'horizontal'
+	var firstChild = $(".weatherInfo > div:first-child").clone(),
+		lastChild = $(".weatherInfo > div:last-child").clone(),
+		container = $(".weatherInfo"),
+		currentPage = 2;
+
+	firstChild.appendTo(container);
+	lastChild.prependTo(container);
+	container.dragend({
+		jumpToPage: 2,
+		direction: 'horizontal',
+		onSwipeEnd: function () {
+			var first = this.pages[0],
+				last = this.pages[this.pages.length - 1];
+
+			if (first === this.activeElement) {
+				this.jumpToPage(this.pages.length - 1);
+			}
+
+			if (last === this.activeElement) {
+				this.jumpToPage(2);
+			}
+
+		},
+		afterInitialize: function () {
+			this.container.style.visibility = "visible";
+		}
 	});
+	setInterval(function () {
+		if (currentPage < 5) {
+			currentPage++;
+		} else {
+			currentPage = 2;
+		}
+		container.dragend({
+			scrollToPage: currentPage
+		});
+	}, 4000);
+
 	setInterval(function () {
 		var date = new Date;
 
@@ -490,6 +525,7 @@ $(function () {
 	});
 
 	$(document).on('click', '#saveNote', saveNote);
+
 	function saveNote() {
 
 		var serialized_drawing = canvas.toDataURL();
@@ -528,6 +564,7 @@ $(function () {
 	}
 
 	$(document).on('click', '#clearNote', clearNote);
+
 	function clearNote() {
 		context.clearRect(0, 0, canvas.width, canvas.height);
 	}

@@ -30,7 +30,7 @@
 <header>
 
 	<div class="users_container">
-		<div class="users">
+		<div class="users gsapAnim">
 
 		</div>
 	</div>
@@ -40,7 +40,7 @@
 		<div class="nieuws">
 
 			<div class="weatherInfo gsapAnim">
-				<div class="weatherInfoPage currentWeather dragend-page" style="align-items: center;">
+				<div class="first weatherInfoPage currentWeather dragend-page" style="align-items: center;">
                     <?php
                     renderTemplate("homeWeather");
                     ?>
@@ -50,7 +50,7 @@
                     renderTemplate("homeWeatherHourly");
                     ?>
 				</div>
-				<div class="weatherInfoPage dragend-page" style="align-items: left;">
+				<div class="last weatherInfoPage dragend-page" style="align-items: left;">
 					<?php
                     renderTemplate("homeWeatherForecast");
                     ?>

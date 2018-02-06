@@ -46,12 +46,15 @@ textarea:focus, input:focus {
 	z-index: 10;
 	border-top: 1px solid #ccc;
 }
+
 .changeMode.goOpen {
 	right: 110px;
 }
+
 .changeMode.goCollective {
 	right: 55px;
 }
+
 .changeMode.goPrivate {
 	right: 0;
 }
@@ -169,6 +172,7 @@ header .users {
 	align-items: center;
 
 }
+
 .rssFeed {
 
 	width: 95%;
@@ -639,6 +643,7 @@ header .users {
 	-moz-box-shadow: 0px 0px 15px 0px rgba(0, 0, 0, 0.6);
 	box-shadow: 0px 0px 15px 0px rgba(0, 0, 0, 0.6);
 }
+
 .displayNote img {
 	width: 100%;
 }
@@ -766,6 +771,7 @@ div#audiowaves.active > span:nth-child(5) {
 	text-align: center;
 
 }
+
 #micro:hover {
 	border-color: #c43932;
 	background-color: #c43932;
@@ -786,6 +792,7 @@ div#audiowaves.active > span:nth-child(5) {
 	border: 1px solid gray;
 	border-radius: 5px;
 	background-color: white;
+	visibility: hidden;
 }
 
 .weatherInfoPage {
@@ -837,6 +844,7 @@ div#audiowaves.active > span:nth-child(5) {
 	border-right: 1px solid #2D3C77;
 
 }
+
 .tempDateInfoDay:last-child, .tempDateInfoHour:last-child {
 	border-right: 0;
 }
@@ -846,6 +854,7 @@ div#audiowaves.active > span:nth-child(5) {
 	font-weight: normal;
 	margin-top: 0;
 }
+
 .tempDateInfoHour h1 small {
 	font-size: 14px;
 }

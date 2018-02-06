@@ -1,4 +1,4 @@
-<div class="tools">
+<div class="tools gsapAnim">
 	
 	<img src="public/media/logo.svg" alt="Jarvis" id="Jarvis">
 
