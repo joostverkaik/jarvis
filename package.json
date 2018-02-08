@@ -1,0 +1,9 @@
+{
+  "name": "jarvis",
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": "https://github.com/joostverkaik/jarvis.git",
+  "author": "joostverkaik <ikben@joostverkaik.nl>",
+  "license": "MIT",
+  "private": true
+}
